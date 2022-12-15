@@ -6,30 +6,35 @@ import openai
 @click.command()
 @click.option(
     "--prompt",
+    "-p",
     type=str,
     required=True,
     help="Prompt to ask.",
 )
 @click.option(
     "--model",
+    "-m",
     type=str,
     default="text-davinci-003",
     help="OpenAI model to use.",
 )
 @click.option(
     "--temp",
+    "-t",
     type=float,
     default=0.4,
     help="Temperature",
 )
 @click.option(
     "--max-tokens",
+    "-mt",
     type=int,
     default=300,
     help="Max tokens",
 )
 @click.option(
     "--num-answers",
+    "-n",
     type=int,
     default=1,
     help="Number of alternative answers",
