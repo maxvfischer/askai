@@ -83,7 +83,8 @@ def ask(prompt: str,
 def get_api_key() -> str:
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        with open(".key", "r") as f:
+        key_path = os.path.dirname(os.path.abspath(__file__)) + "/.key"
+        with open(key_path, "r") as f:
             api_key = f.read().strip()
     return api_key
 
