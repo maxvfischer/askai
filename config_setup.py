@@ -1,3 +1,4 @@
+from dataclasses import dataclass, asdict
 from getpass import getpass
 
 import yaml
@@ -6,7 +7,17 @@ import openai
 from enum import Enum, auto
 from typing import Callable
 from openai.error import AuthenticationError
-from constants import CONFIG_PATH, API_KEY_PATH
+from constants import (
+    CONFIG_PATH,
+    API_KEY_PATH,
+    DEFAULT_MODEL,
+    DEFAULT_NUM_ANSWERS,
+    DEFAULT_MAX_TOKENS,
+    DEFAULT_TEMPERATURE,
+    DEFAULT_TOP_P,
+    DEFAULT_FREQUENCY_PENALTY,
+    DEFAULT_PRESENCE_PENALTY
+)
 
 
 class AvailableModels(Enum):
@@ -20,16 +31,36 @@ class AvailableModels(Enum):
         return list(map(lambda c: c.name.replace("_", "-").lower(), cls))
 
 
+@dataclass
+class Config:
+    model: str = DEFAULT_MODEL
+    num_answers: int = DEFAULT_NUM_ANSWERS
+    max_tokens: int = DEFAULT_MAX_TOKENS
+    temperature: float = DEFAULT_TEMPERATURE
+    top_p: float = DEFAULT_TOP_P
+    frequency_penalty: float = DEFAULT_FREQUENCY_PENALTY
+    presence_penalty: float = DEFAULT_PRESENCE_PENALTY
+
+    @classmethod
+    def from_config_file(cls):
+        if CONFIG_PATH.is_file():
+            with open(CONFIG_PATH, "r") as f:
+                config = yaml.safe_load(f)
+                return cls(**config)
+        else:
+            raise FileNotFoundError("No config file found, can't initialize config. "
+                                    "Run 'askai config reset' to create a default config.")
+
+    def as_dict(self):
+        return asdict(self)
+
+
 class SetupHelper:
     def __init__(self):
         self._api_key = None
-        self._model = None
-        self._num_answers = None
-        self._max_tokens = None
-        self._temperature = None
-        self._top_p = None
-        self._frequency_penalty = None
-        self._presence_penalty = None
+
+        current_config = self._get_current_config()
+        self._config = Config(**current_config)
 
     @staticmethod
     def print_logo():
@@ -69,13 +100,12 @@ class SetupHelper:
 
     @staticmethod
     def print_update_config_note() -> None:
-        click.echo("NOTE: You're about to update the default config of askai. This will have an effect on \n"
-              "how the answers are generated. Make sure that you are well-informed around these effects. \n"
+        click.echo("NOTE: You're about to update the default config of askai. This will have an effect on "
+              "how the answers are generated. Make sure that you are well-informed around these effects. "
               "You can read more here: https://beta.openai.com/docs/api-reference/completions/create")
         click.echo()
 
-    def user_input_model(self, step_num: int, max_tries: int = 3):
-        click.echo(f"-> STEP {step_num} - SET MODEL")
+    def user_input_model(self, max_tries: int = 3):
         for idx, model_name in enumerate(AvailableModels.as_list()):
             click.echo(f"   {idx+1}) {model_name}")
         model = input("Choose model (1-4): ")
@@ -90,14 +120,13 @@ class SetupHelper:
             model = input("Choose model (1-4): ")
             num_of_tries += 1
 
-        self._model = AvailableModels(int(model)).name.replace("_", "-").lower()
-        click.echo(click.style(f"Model chosen: {self._model}", fg="green"))
+        self._config.model = AvailableModels(int(model)).name.replace("_", "-").lower()
+        click.echo(click.style(f"Model chosen: {self._config.model}", fg="green"))
         click.echo()
 
-    def user_input_num_answers(self, step_num: int, max_tries: int = 3):
-        self._num_answers = self._user_input_integer(
-            input_text=f"-> STEP {step_num} - SET NUMBER OF ALTERNATIVE ANSWERS GENERATED PER QUESTION\n"
-                       "   This is the number of answers that will be displayed when you ask \n"
+    def user_input_num_answers(self, max_tries: int = 3):
+        self._config.num_answers = self._user_input_integer(
+            input_text="   This is the number of answers that will be displayed when you ask \n"
                        "   a question. A high number will use more tokens.\n"
                        "   Allowed values: >0\n"
                        "Choose number of answers (press enter for default = 1): ",
@@ -106,10 +135,9 @@ class SetupHelper:
             max_tries=max_tries
         )
 
-    def user_input_max_token(self, step_num: int, max_tries: int = 3):
-        self._max_tokens = self._user_input_integer(
-            input_text=f"-> STEP {step_num} - SET MAXIMUM NUMBER OF TOKENS\n"
-                       "   A too low number might cut your answers shortly.\n"
+    def user_input_max_token(self, max_tries: int = 3):
+        self._config.max_tokens = self._user_input_integer(
+            input_text="   A too low number might cut your answers shortly.\n"
                        "   Allowed values: >0\n"
                        "Choose maximum number of tokens (press enter for default = 300): ",
             default=300,
@@ -117,10 +145,9 @@ class SetupHelper:
             max_tries=max_tries
         )
 
-    def user_input_temperature(self, step_num: int, max_tries: int = 3):
-        self._temperature = self._user_input_float(
-            input_text=f"-> STEP {step_num} - SET TEMPERATURE\n"
-                       "   Sampling temperature to use. Higher values means \n"
+    def user_input_temperature(self, max_tries: int = 3):
+        self._config.temperature = self._user_input_float(
+            input_text="   Sampling temperature to use. Higher values means \n"
                        "   the model will take more risks. Try 0.9 for more \n"
                        "   creative applications, and 0 for ones with a well-defined \n"
                        "   answer.\n"
@@ -131,10 +158,9 @@ class SetupHelper:
             max_tries=max_tries
         )
 
-    def user_input_top_p(self, step_num: int, max_tries: int = 3):
-        self._top_p = self._user_input_float(
-            input_text=f"-> STEP {step_num} - SET TOP_P\n"
-                       "   An alternative to sampling with temperature, called \n"
+    def user_input_top_p(self, max_tries: int = 3):
+        self._config.top_p = self._user_input_float(
+            input_text="   An alternative to sampling with temperature, called \n"
                        "   nucleus sampling, where the model considers the results \n"
                        "   of the tokens with top_p probability mass. So 0.1 means \n"
                        "   only the tokens comprising the top 10% probability mass \n"
@@ -147,10 +173,9 @@ class SetupHelper:
             max_tries=max_tries
         )
 
-    def user_input_frequency_penalty(self, step_num: int, max_tries: int = 3):
-        self._frequency_penalty = self._user_input_float(
-            input_text=f"-> STEP {step_num} - SET FREQUENCY PENALTY\n"
-                       "   Positive values penalize new tokens based on their existing \n"
+    def user_input_frequency_penalty(self, max_tries: int = 3):
+        self._config.frequency_penalty = self._user_input_float(
+            input_text="   Positive values penalize new tokens based on their existing \n"
                        "   frequency in the text so far, decreasing the model's likelihood \n"
                        "   to repeat the same line verbatim."
                        "   Allowed values: -2.0 <= frequency penalty <= 2.0\n"
@@ -160,10 +185,9 @@ class SetupHelper:
             max_tries=max_tries
         )
 
-    def user_input_presence_penalty(self, step_num: int, max_tries: int = 3):
-        self._presence_penalty = self._user_input_float(
-            input_text=f"-> STEP {step_num} - SET PRESENCE PENALTY\n"
-                       "   Positive values penalize new tokens based on whether they appear \n"
+    def user_input_presence_penalty(self, max_tries: int = 3):
+        self._config.presence_penalty = self._user_input_float(
+            input_text="   Positive values penalize new tokens based on whether they appear \n"
                        "   in the text so far, increasing the model's likelihood to talk about \n"
                        "   new topics."
                        "   Allowed values: -2.0 <= presence penalty <= 2.0\n"
@@ -179,20 +203,36 @@ class SetupHelper:
         click.echo(click.style("Your API key has been successfully added!", fg="green"))
 
     def save_config(self):
-        config = {
-            "model": self._model,
-            "num_answers": self._num_answers,
-            "max_tokens": self._max_tokens,
-            "temperature": self._temperature,
-            "top_p": self._top_p,
-            "frequency_penalty": self._frequency_penalty,
-            "presence_penalty": self._presence_penalty,
-        }
-
+        config = self._config.as_dict()
         with open(CONFIG_PATH, "w") as f:
             yaml.dump(config, f)
 
         click.echo(click.style("Config saved successfully!", fg="green"))
+
+    @staticmethod
+    def save_default_config():
+        config = Config().as_dict()  # Create config with default values
+        with open(CONFIG_PATH, "w") as f:
+            yaml.dump(config, f)
+
+        click.echo("\nDefault config has been created with the following values:")
+        for key, value in config.items():
+            click.echo(f"  * {key}={value}")
+        click.echo(click.style("Successfully reset config to default values", fg="green"))
+        click.echo("To change the config, please see: 'askai config --help'")
+
+    @staticmethod
+    def show_config():
+        if not CONFIG_PATH.is_file():
+            click.echo("No config exists. Please initialize askai ('askai init') or see 'askai config --help'.\n")
+        else:
+            with open(CONFIG_PATH, "r") as f:
+                try:
+                    config = yaml.safe_load(f)
+                    for key, value in config.items():
+                        click.echo(f"{key}: {value}")
+                except yaml.YAMLError:
+                    click.echo("Something is wrong with the config. Please reset: 'askai config reset'")
 
     @staticmethod
     def _user_input_integer(input_text: str,
@@ -247,6 +287,14 @@ class SetupHelper:
 
         click.echo(click.style("Too many invalid tries. Aborted!", fg="red"))
         exit(1)
+
+    @staticmethod
+    def _get_current_config():
+        current_config = {}
+        if CONFIG_PATH.is_file():
+            with open(CONFIG_PATH, "r") as f:
+                current_config = yaml.safe_load(f)
+        return current_config
 
 
 def _is_valid_api_key(key: str) -> bool:
