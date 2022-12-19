@@ -1,6 +1,6 @@
 import click as click
 
-from config_setup import SetupHelper
+from utils import KeyHelper, PrintHelper
 from constants import API_KEY_PATH
 
 
@@ -13,20 +13,22 @@ def key():
 @key.command()
 def add() -> None:
     """Add API key"""
-    setup_helper = SetupHelper()
-    setup_helper.user_input_api_key()
-    setup_helper.save_api_key()
+    if API_KEY_PATH.is_file():
+        PrintHelper.key_exists()
+
+    key_helper = KeyHelper()
+    key_helper.input()
+    key_helper.save()
 
 
 @key.command()
 def remove() -> None:
     """Remove your stored API key"""
     if not API_KEY_PATH.is_file():
-        click.echo(click.style("No stored API key found.", fg="red"))
+        PrintHelper.no_key()
     else:
         user_verification = input("Do you want to remove your API key? [y/Y]? ")
         if user_verification.lower() in ["y", "yes"]:
-            API_KEY_PATH.unlink()
-            click.echo(click.style("API key removed.", fg="green"))
+            KeyHelper().remove()
         else:
             click.echo("API key not removed.")

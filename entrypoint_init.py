@@ -1,14 +1,19 @@
 import click
 
-from config_setup import SetupHelper
+from utils import KeyHelper, ConfigHelper, PrintHelper
 
 
 @click.command()
 def init() -> None:
     """Initialize askai."""
-    setup_helper = SetupHelper()
-    setup_helper.print_logo()
-    setup_helper.user_input_api_key()
-    setup_helper.save_api_key()
-    setup_helper.save_default_config()
+    key_helper = KeyHelper()
+    config_helper = ConfigHelper()
+    PrintHelper.logo()
+
+    PrintHelper.key()
+    key_helper.input()
+    key_helper.save()
+
+    config_helper.reset()
+
     click.echo("Initialization done!")
