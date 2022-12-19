@@ -4,6 +4,7 @@ from getpass import getpass
 import yaml
 import click
 import openai
+from openai.openai_object import OpenAIObject
 from enum import Enum, auto
 from typing import Callable
 from openai.error import AuthenticationError
@@ -42,7 +43,7 @@ class ConfigHelper:
     presence_penalty: float = DEFAULT_PRESENCE_PENALTY
 
     @classmethod
-    def from_file(cls):
+    def from_file(cls) -> 'ConfigHelper':
         if CONFIG_PATH.is_file():
             with open(CONFIG_PATH, "r") as f:
                 config = yaml.safe_load(f)
@@ -51,7 +52,7 @@ class ConfigHelper:
             raise FileNotFoundError("No config file found, can't initialize config. "
                                     "Run 'askai config reset' to create a default config.")
 
-    def input_model(self):
+    def input_model(self) -> None:
         model = input("Choose model (1-4): ")
         num_of_tries = 1
 
@@ -68,28 +69,28 @@ class ConfigHelper:
         click.echo(click.style(f"Model chosen: {self.model}", fg="green"))
         click.echo()
 
-    def input_num_answer(self):
+    def input_num_answer(self) -> None:
         self.num_answers = self._input_integer(default_value=1, predicate=lambda x: x > 0)
 
-    def input_max_token(self):
+    def input_max_token(self) -> None:
         self.max_tokens = self._input_integer(default_value=300, predicate=lambda x: x > 0)
 
-    def input_temperature(self):
+    def input_temperature(self) -> None:
         self.temperature = self._input_float(default_value=0.4, predicate=lambda x: 0.0 <= x <= 1.0)
 
-    def input_top_p(self):
+    def input_top_p(self) -> None:
         self.top_p = self._input_float(default_value=0.0, predicate=lambda x: 0.0 <= x <= 1.0)
 
-    def input_frequency_penalty(self):
+    def input_frequency_penalty(self) -> None:
         self.frequency_penalty = self._input_float(default_value=0.0, predicate=lambda x: -2.0 <= x <= 2.0)
 
-    def input_presence_penalty(self):
+    def input_presence_penalty(self) -> None:
         self.presence_penalty = self._input_float(default_value=0.0, predicate=lambda x: -2.0 <= x <= 2.0)
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return asdict(self)
 
-    def update(self):
+    def update(self) -> None:
         config = self.as_dict()
         with open(CONFIG_PATH, "w") as f:
             yaml.dump(config, f)
@@ -97,7 +98,7 @@ class ConfigHelper:
         click.echo(click.style("Config updated successfully!", fg="green"))
 
     @staticmethod
-    def reset():
+    def reset() -> None:
         config = ConfigHelper().as_dict()  # Create config with default values
         with open(CONFIG_PATH, "w") as f:
             yaml.dump(config, f)
@@ -109,7 +110,7 @@ class ConfigHelper:
         click.echo("To change the config, please see: 'askai config --help'\n")
 
     @staticmethod
-    def show():
+    def show() -> None:
         if not CONFIG_PATH.is_file():
             click.echo("No config exists. Please initialize askai ('askai init') or see 'askai config --help'.\n")
         else:
@@ -176,7 +177,7 @@ class ConfigHelper:
 class KeyHelper:
     api_key: str = ""
 
-    def input(self):
+    def input(self) -> None:
         key = getpass("Enter API Key: ")
         num_tries = 1
 
@@ -190,18 +191,18 @@ class KeyHelper:
 
         self.api_key = key
 
-    def save(self):
+    def save(self) -> None:
         API_KEY_PATH.parent.mkdir(parents=True, exist_ok=True)
         API_KEY_PATH.write_text(self.api_key)
         click.echo(click.style("Your API key has been successfully added!", fg="green"))
 
     @staticmethod
-    def remove():
+    def remove() -> None:
         API_KEY_PATH.unlink()
         click.echo(click.style("API key removed.", fg="green"))
 
     @classmethod
-    def from_file(cls):
+    def from_file(cls) -> str:
         with open(API_KEY_PATH, "r") as f:
             api_key = f.read().strip()
         return api_key
@@ -220,7 +221,7 @@ class KeyHelper:
 class PrintHelper:
 
     @staticmethod
-    def logo():
+    def logo() -> None:
         click.echo("\n"
                    "██████████   ██████████   ███   ███  ██████████   ███\n"
                    "███    ███   ███    ███   ███  ███   ███    ███\n"
@@ -235,7 +236,7 @@ class PrintHelper:
                    "    ~~~~~~~ Your simple terminal helper ~~~~~~~\n")
 
     @staticmethod
-    def what_is_askai():
+    def what_is_askai() -> None:
         click.echo("What is askai?\n"
                    "  askai is a simple CLI integration with the worlds most powerful \n"
                    "  and capable AI-model, OpenAI GPT3. This gives you the ability to \n"
@@ -252,7 +253,7 @@ class PrintHelper:
                    "\n")
 
     @staticmethod
-    def does_it_cost():
+    def does_it_cost() -> None:
         click.echo("Does it cost anything?\n"
                    "  Yes (after the free quota is used).\n"
                    "\n"
@@ -262,56 +263,56 @@ class PrintHelper:
                    "  OpenAI account to continue to use askai.\n")
 
     @staticmethod
-    def requirements():
+    def requirements() -> None:
         click.echo("Requirements:\n"
                    "  * Create an OpenAI account and generate an API-key\n"
                    "  * Run 'askai init' to add you API key and setup the default config.\n")
 
     @staticmethod
-    def key():
+    def key() -> None:
         click.echo("To use the CLI, please enter your OpenAI API key. The key can be generated by \n"
                     "creating an account at https://openai.com/api/\n"
                     "\n"
                     "The key will only be stored locally in `~/.askai/key`.\n")
 
     @staticmethod
-    def key_exists():
+    def key_exists() -> None:
         click.echo("NOTE: You've already added a key. This old key will be overwritten in this setup!\n")
 
     @staticmethod
-    def no_key():
+    def no_key() -> None:
         click.echo(click.style("No stored API key found.", fg="red"))
 
     @staticmethod
-    def update_config():
+    def update_config() -> None:
         click.echo("NOTE: You're about to update the default config of askai. This will have an effect on "
                    "how the answers are generated. Make sure that you are well-informed around these effects. "
                    "You can read more here: https://beta.openai.com/docs/api-reference/completions/create\n")
 
     @staticmethod
-    def step(step: int, description: str):
+    def step(step: int, description: str) -> None:
         click.echo(f"-> STEP {step} - {description}")
 
     @staticmethod
-    def model():
+    def model() -> None:
         click.echo("   Different models have different capabilities.")
         for idx, model_name in enumerate(AvailableModels.as_list()):
             click.echo(f"   {idx+1}) {model_name}")
 
     @staticmethod
-    def num_answers():
+    def num_answers() -> None:
         click.echo("   This is the number of answers that will be displayed when you ask \n"
                    "   a question. A high number will use more tokens.\n\n"
                    "   Allowed values: >0\n")
 
     @staticmethod
-    def max_tokens():
+    def max_tokens() -> None:
         click.echo("   Maximum number of tokens used, including question (prompt)\n"
                    "   and generated answers. A too low number might cut your answers shortly.\n\n"
                    "   Allowed values: >0\n")
 
     @staticmethod
-    def temperature():
+    def temperature() -> None:
         click.echo("   Sampling temperature to use. Higher values means \n"
                    "   the model will take more risks. Try 0.9 for more \n"
                    "   creative applications, and 0 for ones with a well-defined \n"
@@ -319,7 +320,7 @@ class PrintHelper:
                    "   Allowed values: 0.0 <= temperature <= 1.0\n")
 
     @staticmethod
-    def top_p():
+    def top_p() -> None:
         click.echo("   An alternative to sampling with temperature, called \n"
                    "   nucleus sampling, where the model considers the results \n"
                    "   of the tokens with top_p probability mass. So 0.1 means \n"
@@ -329,21 +330,21 @@ class PrintHelper:
                    "   Allowed values: 0.0 <= top_p <= 1.0\n")
 
     @staticmethod
-    def frequency_penalty():
+    def frequency_penalty() -> None:
         click.echo("   Positive values penalize new tokens based on their existing \n"
                    "   frequency in the text so far, decreasing the model's likelihood \n"
                    "   to repeat the same line verbatim.\n\n"
                    "   Allowed values: -2.0 <= frequency penalty <= 2.0\n")
 
     @staticmethod
-    def presence_penalty():
+    def presence_penalty() -> None:
         click.echo("   Positive values penalize new tokens based on whether they appear \n"
                    "   in the text so far, increasing the model's likelihood to talk about \n"
                    "   new topics.\n\n"
                    "   Allowed values: -2.0 <= presence penalty <= 2.0\n")
 
     @staticmethod
-    def print_response(response: openai.openai_object.OpenAIObject):
+    def print_response(response: OpenAIObject) -> None:
         if len(response["choices"]) == 1:
             print(response["choices"][0]["text"].lstrip("\n"))
         else:

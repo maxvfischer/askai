@@ -4,7 +4,7 @@ from utils import ConfigHelper, PrintHelper
 
 
 @click.group()
-def config():
+def config() -> None:
     """Handle your config."""
     pass
 
@@ -25,12 +25,12 @@ def show() -> None:
 
 
 @config.group()
-def update():
+def update() -> None:
     """Update your config"""
 
 
 @update.command("all", help="Interface to update the full default config")
-def all() -> None:
+def update_all() -> None:
     config_helper = ConfigHelper()
     PrintHelper.update_config()
 
@@ -66,7 +66,7 @@ def all() -> None:
 
 
 @update.command(help="Update model")
-def model():
+def model() -> None:
     PrintHelper.model()
     config_helper = ConfigHelper.from_file()
     config_helper.input_model()
@@ -74,7 +74,7 @@ def model():
 
 
 @update.command(help="Update number of altenative answers generated per question")
-def num_answers():
+def num_answers() -> None:
     PrintHelper.num_answers()
     config_helper = ConfigHelper.from_file()
     config_helper.input_num_answer()
@@ -82,7 +82,7 @@ def num_answers():
 
 
 @update.command(help="Update maximum number of tokens")
-def max_tokens():
+def max_tokens() -> None:
     PrintHelper.max_tokens()
     config_helper = ConfigHelper().from_file()
     config_helper.input_max_token()
@@ -90,7 +90,7 @@ def max_tokens():
 
 
 @update.command(help="Update temperature")
-def temperature():
+def temperature() -> None:
     PrintHelper.temperature()
     config_helper = ConfigHelper().from_file()
     config_helper.input_temperature()
@@ -98,7 +98,7 @@ def temperature():
 
 
 @update.command(help="Update top_p")
-def top_p():
+def top_p() -> None:
     PrintHelper.top_p()
     config_helper = ConfigHelper().from_file()
     config_helper.input_top_p()
@@ -106,7 +106,7 @@ def top_p():
 
 
 @update.command(help="Update frequency penalty")
-def frequency_penalty():
+def frequency_penalty() -> None:
     PrintHelper.frequency_penalty()
     config_helper = ConfigHelper.from_file()
     config_helper.input_frequency_penalty()
@@ -114,7 +114,7 @@ def frequency_penalty():
 
 
 @update.command(help="Update presence penalty")
-def presence_penalty():
+def presence_penalty() -> None:
     PrintHelper.presence_penalty()
     config_helper = ConfigHelper.from_file()
     config_helper.input_presence_penalty()

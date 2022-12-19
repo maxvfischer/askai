@@ -2,7 +2,6 @@ import click
 import openai
 
 from utils import KeyHelper, ConfigHelper, PrintHelper
-from constants import API_KEY_PATH
 from entrypoint_config import config
 from entrypoint_init import init
 from entrypoint_key import key
@@ -47,7 +46,7 @@ class DefaultCommandGroup(click.Group):
 
 
 @click.group(cls=DefaultCommandGroup)
-def askai():
+def askai() -> None:
     """"""
     pass
 
@@ -68,7 +67,7 @@ def ask(prompt: str,
         max_tokens: int,
         top_p: float,
         frequency_penalty: float,
-        presence_penalty: float):
+        presence_penalty: float) -> None:
     openai.api_key = KeyHelper.from_file()
     _config = ConfigHelper.from_file()
 
