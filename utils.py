@@ -112,7 +112,8 @@ class ConfigHelper:
     @staticmethod
     def show() -> None:
         if not CONFIG_PATH.is_file():
-            click.echo("No config exists. Please initialize askai ('askai init') or see 'askai config --help'.\n")
+            click.echo("No config exists. Please reset the config ('askai config reset') "
+                       "or see 'askai config --help'.\n")
         else:
             with open(CONFIG_PATH, "r") as f:
                 try:
@@ -120,7 +121,7 @@ class ConfigHelper:
                     for key, value in config.items():
                         click.echo(f"{key}: {value}")
                 except yaml.YAMLError:
-                    click.echo("Something is wrong with the config. Please reset: 'askai config reset'")
+                    click.echo("Something is wrong with the config. Please reset the config: 'askai config reset'")
 
     @staticmethod
     def _input_integer(default_value: int,
@@ -224,11 +225,11 @@ class PrintHelper:
     def logo() -> None:
         click.echo("\n"
                    "██████████   ██████████   ███   ███  ██████████   ███\n"
-                   "███    ███   ███    ███   ███  ███   ███    ███\n"
+                   "███    ███   ███    ███   ███   ███  ███    ███\n"
                    "███    ███   ███    ███   ███  ███   ███    ███\n"
                    "███    ███   ███    ███   ███▐███    ███    ███    ▄█\n"
                    "███    ███   ███          █████▀     ███    ███   ███\n"
-                   "██████████   ██████████   █████      ██████████   ███▌\n"
+                   "██████████   ██████████   █████▄     ██████████   ███▌\n"
                    "███    ███          ███   ███▐███    ███    ███   ███▌\n"
                    "███    ███          ███   ███  ███   ███    ███   ███\n"
                    "███    ███   ██████████   ███   ███  ███    ███   █▀\n"
