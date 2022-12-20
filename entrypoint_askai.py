@@ -79,8 +79,7 @@ def ask(prompt: str,
         n=num_answers if num_answers else _config.num_answers,
         top_p=top_p if top_p else _config.top_p,
         frequency_penalty=frequency_penalty if frequency_penalty else _config.frequency_penalty,
-        presence_penalty=presence_penalty if presence_penalty else _config.presence_penalty,
-        timeout=1
+        presence_penalty=presence_penalty if presence_penalty else _config.presence_penalty
     )
     PrintHelper.print_response(response=response)
 
