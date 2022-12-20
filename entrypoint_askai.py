@@ -54,12 +54,12 @@ def askai() -> None:
 @askai.command(default_command=True)
 @click.argument("prompt")
 @click.option("-n", "--num-answers", type=int, help="Number of alternative answers")
-@click.option("--model", type=str, help="OpenAI model to use. E.g. `text-ada-001`")
-@click.option("--temperature", type=float, help="Temperature")
+@click.option("-m", "--model", type=str, help="OpenAI model to use. E.g. `text-ada-001`")
+@click.option("-t", "--temperature", type=float, help="Temperature")
 @click.option("--max-tokens", type=int, help="Max tokens")
 @click.option("--top-p", type=float, help="Top p")
-@click.option("--frequency_penalty", type=int, help="Frequency penalty")
-@click.option("--presence_penalty", type=int, help="Presence penalty")
+@click.option("--frequency-penalty", type=int, help="Frequency penalty")
+@click.option("--presence-penalty", type=int, help="Presence penalty")
 def ask(prompt: str,
         num_answers: int,
         model: str,
