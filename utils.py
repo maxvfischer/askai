@@ -70,22 +70,28 @@ class ConfigHelper:
         click.echo()
 
     def input_num_answer(self) -> None:
-        self.num_answers = self._input_integer(default_value=1, predicate=lambda x: x > 0)
+        self.num_answers = self._input_integer(default_value=DEFAULT_NUM_ANSWERS, predicate=lambda x: x > 0)
 
     def input_max_token(self) -> None:
-        self.max_tokens = self._input_integer(default_value=300, predicate=lambda x: x > 0)
+        self.max_tokens = self._input_integer(default_value=DEFAULT_MAX_TOKENS, predicate=lambda x: x > 0)
 
     def input_temperature(self) -> None:
-        self.temperature = self._input_float(default_value=0.4, predicate=lambda x: 0.0 <= x <= 1.0)
+        self.temperature = self._input_float(default_value=DEFAULT_TEMPERATURE, predicate=lambda x: 0.0 <= x <= 1.0)
 
     def input_top_p(self) -> None:
-        self.top_p = self._input_float(default_value=0.0, predicate=lambda x: 0.0 <= x <= 1.0)
+        self.top_p = self._input_float(default_value=DEFAULT_TOP_P, predicate=lambda x: 0.0 <= x <= 1.0)
 
     def input_frequency_penalty(self) -> None:
-        self.frequency_penalty = self._input_float(default_value=0.0, predicate=lambda x: -2.0 <= x <= 2.0)
+        self.frequency_penalty = self._input_float(
+            default_value=DEFAULT_FREQUENCY_PENALTY,
+            predicate=lambda x: -2.0 <= x <= 2.0
+        )
 
     def input_presence_penalty(self) -> None:
-        self.presence_penalty = self._input_float(default_value=0.0, predicate=lambda x: -2.0 <= x <= 2.0)
+        self.presence_penalty = self._input_float(
+            default_value=DEFAULT_PRESENCE_PENALTY,
+            predicate=lambda x: -2.0 <= x <= 2.0
+        )
 
     def as_dict(self) -> dict:
         return asdict(self)
