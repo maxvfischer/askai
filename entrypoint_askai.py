@@ -8,14 +8,21 @@ from entrypoint_key import key
 
 
 class DefaultCommandGroup(click.Group):
-    """allow a default command for a group"""
+    """
+    Allows for both:
+    * askai "<COMMAND>"
+    * askai <GROUP> <COMMAND>
+
+    Inspired from: https://stackoverflow.com/a/52069546
+    """
+
+    default_command: bool
 
     def command(self, *args, **kwargs):
         default_command = kwargs.pop('default_command', False)
         if default_command and not args:
             kwargs['name'] = kwargs.get('name', ' ')
-        decorator = super(
-            DefaultCommandGroup, self).command(*args, **kwargs)
+        decorator = super(DefaultCommandGroup, self).command(*args, **kwargs)
 
         if default_command:
             def new_decorator(f):
@@ -38,11 +45,12 @@ class DefaultCommandGroup(click.Group):
             return super(
                 DefaultCommandGroup, self).resolve_command(ctx, args)
 
-    def format_usage(self, ctx, formatter):
+    def format_help(self, ctx, formatter) -> None:
         PrintHelper.logo()
-        PrintHelper.what_is_askai()
-        PrintHelper.does_it_cost()
-        PrintHelper.requirements()
+        PrintHelper.help_what_is_askai()
+        PrintHelper.help_does_it_cost()
+        PrintHelper.help_requirements()
+        PrintHelper.help_commands()
 
 
 @click.group(cls=DefaultCommandGroup)
