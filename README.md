@@ -42,8 +42,10 @@ askai init
 
 ## Create OpenAI API-key
 
-For `askai` to work, you need to add an OpenAI API-key. When creating an account, 
-OpenAI gives you $18 to use for free. After that you need to set up a paid account. 
+For `askai` to work, you need to add an OpenAI API-key. When creating an OpenAI account, 
+they give you $18 to use for free. After that you need to set up a paid account to 
+continue using their service. 
+
 During the development and testing of this CLI, I used $0.67.
 
 An OpenAI API-key can be created by:
