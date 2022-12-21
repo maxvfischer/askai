@@ -274,7 +274,39 @@ class PrintHelper:
         click.echo("Requirements:\n"
                    "  * Create an OpenAI account and generate an API-key\n"
                    "  * Run 'askai init' to add you API key and setup the default config.\n")
-    
+
+    @staticmethod
+    def help_main_command_options() -> None:
+        click.echo("Override config:\n"
+                   "  askai \"<QUESTION>\" <OPTION> <VALUE>\n"
+                   "\n"
+                   "  --num-answers or -n\n"
+                   "    Number of answers to generate. Note that more answers consume more tokens.\n"
+                   "    Allowed values: >0\n"
+                   "\n"
+                   "  --model or -m\n"
+                   "    Which model to use. See list of available models below.\n"
+                   "\n"
+                   "  --temperature or -t\n"
+                   "    What sampling nucleus to use. The model considers the results of the tokens \n"
+                   "    with top_p probability mass. Do not use at the same time as temperature.\n"
+                   "    Allowed values: 0.0 <= top_p <= 1.0\n"
+                   "\n"
+                   "  --max-tokens\n"
+                   "    Maximum number of tokens used per question (incl. question + answer).\n"
+                   "    Allowed values: >0\n"
+                   "\n"
+                   "  --frequency-penalty\n"
+                   "    Positive values penalize new tokens based on whether they appear in the text so \n"
+                   "    far, increasing the model's likelihood to talk about new topics.\n"
+                   "    Allowed values: -2.0 <= frequency_penalty <= 2.0\n"
+                   "\n"
+                   "  --presence-penalty\n"
+                   "    Positive values penalize new tokens based on their existing frequency in the text \n"
+                   "    so far, decreasing the model's likelihood to repeat the same line verbatim.\n"
+                   "    Allowed values: -2.0 <= presence_penalty <= 2.0\n"
+                   "\n")
+
     @staticmethod
     def help_commands() -> None:
         click.echo("Commands:\n"

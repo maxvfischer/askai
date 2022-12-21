@@ -50,6 +50,7 @@ class DefaultCommandGroup(click.Group):
         PrintHelper.help_what_is_askai()
         PrintHelper.help_does_it_cost()
         PrintHelper.help_requirements()
+        PrintHelper.help_main_command_options()
         PrintHelper.help_commands()
 
 
