@@ -34,15 +34,21 @@ askai init
 
 ![init](./images/init.svg)
 
+## Create OpenAI API-key
+
+For `askai` to work, you need to add an OpenAI API-key. When creating an account, 
+OpenAI gives you $18 to use for free. After that you need to set up a paid account. 
+During the development and testing of this CLI, I used $0.67.
+
 An OpenAI API-key can be created by:
 
 1. Creating an account on OpenAI: https://openai.com/api/
 2. Logging in and click on `New API keys`
 3. Click `Create new secret key`
 
-When creating an account, OpenAI gives you $18 to use for free. After that you 
-need to set up a paid account. During the development and testing of this CLI, I 
-used $0.67. 
+| :information_source: **Other model integrations**                                                                                                                |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Currently, `askai` only supports integration with OpenAI. But as soon as new NLP-model  API-endpoints start popping up, I will work on integrating them as well. |
 
 ## How to use
 
