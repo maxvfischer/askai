@@ -23,9 +23,9 @@ cd askai
 pip install .
 ```
 
-## Initialize config and API-key
+## Initialize askai
 
-`askai` needs to be initialized to setup the default config and to connect your 
+`askai` needs to be initialized to set up the default config and to connect your 
 OpenAI API key. Note that the key is only stored locally in `~/.askai/key`.
 
 ```bash
@@ -48,6 +48,8 @@ used $0.67.
 
 
 ### Simple question
+Ask a question using your saved config.
+
 ```
 askai "<QUESTION>"
 ```
@@ -72,7 +74,52 @@ askai "<QUESTION>" --num-answers <INT> --model <MODEL_STRING> --temperature <FLO
 | --frequency-penalty | -2.0 <= frequency_penalty <= 2.0 | Positive values penalize new tokens based on whether they appear in the text so  far, increasing the model's likelihood to talk about new topics.              |
 | --presence-penalty  | -2.0 <= presence_penalty <= 2.0  | Positive values penalize new tokens based on their existing frequency in the text  so far, decreasing the model's likelihood to repeat the same line verbatim. |
 
-### Available models
+## Update config
+If you find yourself overriding the config a lot when asking questions, you can update the default config instead.
+
+### Update all config values
+
+```bash
+askai config update all
+```
+
+### Update individual config values
+
+```bash
+askai config update num-answers
+askai config update model
+askai config update temperature
+askai config update top-p
+askai config update max-tokens
+askai config update frequency-penalty
+askai config update presence-penalty
+```
+
+### Reset to default config
+```bash
+askai config reset
+```
+
+### See current config
+```
+askai config show
+```
+
+## Update API-key
+
+It's possible to update the API-key without re-initializing.
+
+### Overwrite current API-key
+```
+askai key add
+```
+
+### Remove current API-key
+```
+askai key remove
+```
+
+## Available models
 
 This list was updated from OpenAI's website on 2022-12-20 and might go out of date at any time. Please
 check [here](https://beta.openai.com/docs/models) to see an accurate list.
