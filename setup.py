@@ -3,7 +3,11 @@ from setuptools import setup  # type: ignore
 
 setup(
     name="askai",
-    version="0.1",
+    version="1.0.0",
+    author="Max Fischer",
+    license="MIT",
+    url="https://github.com/maxvfischer/askai",
+
     py_modules=["entrypoint_askai"],
     install_requires=[
         "click==8.1.3",
