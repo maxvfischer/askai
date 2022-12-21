@@ -5,7 +5,7 @@
 `askai` is a CLI integration with OpenAI's GPT3, enabling you to ask questions and 
 receive the answers straight in your terminal.
 
-![conda](./images/question_conda.svg)
+![conda](https://github.com/maxvfischer/askai/blob/main/images/question_conda.svg)
 
 
 | :exclamation: **Other model integrations** :exclamation:                                                                                                    |
@@ -38,7 +38,7 @@ OpenAI API key. Note that the key is only stored locally in `~/.askai/key`.
 askai init
 ```
 
-![init](./images/init.svg)
+![init](https://github.com/maxvfischer/askai/blob/main/images/init.svg)
 
 ## Create OpenAI API-key
 
@@ -63,7 +63,7 @@ Ask a question using your saved config.
 ```
 askai "<QUESTION>"
 ```
-![conda](./images/question_conda.svg)
+![conda](https://github.com/maxvfischer/askai/blob/main/images/question_conda.svg)
 
 
 ### Override config
@@ -72,7 +72,7 @@ It's possible to override the default config by using arguments:
 ```
 askai "<QUESTION>" --num-answers <INT> --model <MODEL_STRING> --temperature <FLOAT> --top_p <FLOAT> --max-tokens <INT> --frequency-penalty <FLOAT> --presence_penalty <FLOAT>
 ```
-![conda](./images/haiku.svg)
+![conda](https://github.com/maxvfischer/askai/blob/main/images/haiku.svg)
 
 | **Argument**        | **Allowed values**               | **Description**                                                                                                                                                |
 |---------------------|----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
