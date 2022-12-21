@@ -210,9 +210,14 @@ class KeyHelper:
 
     @classmethod
     def from_file(cls) -> str:
-        with open(API_KEY_PATH, "r") as f:
-            api_key = f.read().strip()
-        return api_key
+        try:
+            with open(API_KEY_PATH, "r") as f:
+                api_key = f.read().strip()
+            return api_key
+        except FileNotFoundError:
+            click.echo(click.style("No API-key found, can't answer question. "
+                                   "Please add a key ('askai key add') or initialize ('askai init').", fg="red"))
+            exit()
 
     @staticmethod
     def _is_valid_api_key(key: str) -> bool:
