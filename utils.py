@@ -49,8 +49,9 @@ class ConfigHelper:
                 config = yaml.safe_load(f)
                 return cls(**config)
         else:
-            raise FileNotFoundError("No config file found, can't initialize config. "
-                                    "Run 'askai config reset' to create a default config.")
+            click.echo(click.style("No config file found, can't initialize config. "
+                                    "Run 'askai config reset' to create a default config.", fg="red"))
+            exit()
 
     def input_model(self) -> None:
         model = input("Choose model (1-4): ")
@@ -210,11 +211,11 @@ class KeyHelper:
 
     @classmethod
     def from_file(cls) -> str:
-        try:
+        if API_KEY_PATH.is_file():
             with open(API_KEY_PATH, "r") as f:
                 api_key = f.read().strip()
             return api_key
-        except FileNotFoundError:
+        else:
             click.echo(click.style("No API-key found, can't answer question. "
                                    "Please add a key ('askai key add') or initialize ('askai init').", fg="red"))
             exit()
