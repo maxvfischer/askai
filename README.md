@@ -46,7 +46,7 @@ An OpenAI API-key can be created by:
 2. Logging in and click on `New API keys`
 3. Click `Create new secret key`
 
-| :information_source: **Other model integrations**                                                                                                                |
+| :exclamation: **Other model integrations** :exclamation:                                                                                                         |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Currently, `askai` only supports integration with OpenAI. But as soon as new NLP-model  API-endpoints start popping up, I will work on integrating them as well. |
 
