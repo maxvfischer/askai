@@ -7,6 +7,12 @@ receive the answers straight in your terminal.
 
 ![conda](./images/question_conda.svg)
 
+
+| :exclamation: **Other model integrations** :exclamation:                                                                                                         |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Currently, `askai` only supports integration with OpenAI. But as soon as new NLP-model  API-endpoints start popping up, I will work on integrating them as well. |
+
+
 ## Installation
 
 You can either install it through pip
@@ -45,10 +51,6 @@ An OpenAI API-key can be created by:
 1. Creating an account on OpenAI: https://openai.com/api/
 2. Logging in and click on `New API keys`
 3. Click `Create new secret key`
-
-| :exclamation: **Other model integrations** :exclamation:                                                                                                         |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Currently, `askai` only supports integration with OpenAI. But as soon as new NLP-model  API-endpoints start popping up, I will work on integrating them as well. |
 
 ## How to use
 
