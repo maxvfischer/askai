@@ -8,9 +8,9 @@ receive the answers straight in your terminal.
 ![conda](./images/question_conda.svg)
 
 
-| :exclamation: **Other model integrations** :exclamation:                                                                                                         |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Currently, `askai` only supports integration with OpenAI. But as soon as new NLP-model  API-endpoints start popping up, I will work on integrating them as well. |
+| :exclamation: **Other model integrations** :exclamation:                                                                                                    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Currently, `askai` only supports integration with OpenAI. But as soon as other NLP API-endpoints start popping up, I will work on integrating them as well. |
 
 
 ## Installation
