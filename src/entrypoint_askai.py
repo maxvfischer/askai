@@ -1,10 +1,10 @@
 import click
 import openai
 
-from utils import KeyHelper, ConfigHelper, PrintHelper
-from entrypoint_config import config
-from entrypoint_init import init
-from entrypoint_key import key
+from .utils import KeyHelper, ConfigHelper, PrintHelper
+from .entrypoint_config import config
+from .entrypoint_init import init
+from .entrypoint_key import key
 
 
 class DefaultCommandGroup(click.Group):

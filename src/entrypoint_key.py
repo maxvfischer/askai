@@ -1,7 +1,7 @@
 import click as click
 
-from utils import KeyHelper, PrintHelper
-from constants import API_KEY_PATH
+from .utils import KeyHelper, PrintHelper
+from .constants import API_KEY_PATH
 
 
 @click.group()

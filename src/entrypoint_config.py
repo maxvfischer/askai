@@ -1,6 +1,6 @@
 import click
 
-from utils import ConfigHelper, PrintHelper
+from .utils import ConfigHelper, PrintHelper
 
 
 @click.group()

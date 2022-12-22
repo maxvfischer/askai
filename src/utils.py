@@ -1,14 +1,13 @@
-from dataclasses import dataclass, asdict
-from getpass import getpass
-
 import yaml
 import click
 import openai
-from openai.openai_object import OpenAIObject
+from getpass import getpass
 from enum import Enum, auto
 from typing import Callable
+from dataclasses import dataclass, asdict
 from openai.error import AuthenticationError
-from constants import (
+from openai.openai_object import OpenAIObject
+from .constants import (
     CONFIG_PATH,
     API_KEY_PATH,
     DEFAULT_MODEL,
