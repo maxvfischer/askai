@@ -1,16 +1,16 @@
-from setuptools import setup  # type: ignore
+from setuptools import find_packages, setup  # type: ignore
 
 
 setup(
     name="askai",
-    version="1.0.1",
+    version="1.0.2",
     author="Max Fischer",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     license="MIT",
     url="https://github.com/maxvfischer/askai",
-    download_url="https://github.com/maxvfischer/askai/archive/refs/tags/v1.0.1.tar.gz",
-    py_modules=["src"],
+    download_url="https://github.com/maxvfischer/askai/archive/refs/tags/v1.0.2.tar.gz",
+    package_dir={"askai": "src/askai"},
     install_requires=[
         "click==8.1.3",
         "openai==0.25.0",
@@ -18,6 +18,6 @@ setup(
     ],
     entry_points="""
         [console_scripts]
-        askai=src.entrypoint_askai:askai
+        askai=askai.entrypoint_askai:askai
     """
 )
