@@ -1,14 +1,14 @@
 <div align="center">
-    <img style="display: block;" align="center" src="images/logo.png"/>
+    <img style="display: block;" align="center" src="https://github.com/maxvfischer/askai/blob/main/images/logo.png?raw=True"/>
 </div>
 
 `askai` is a CLI integration with OpenAI's GPT3, enabling you to ask questions and 
 receive the answers straight in your terminal.
 
-![conda](https://github.com/maxvfischer/askai/blob/main/images/question_conda.svg)
+![conda](https://github.com/maxvfischer/askai/blob/main/images/question_conda.svg?raw=True)
 
 
-| :exclamation: **Other model integrations** :exclamation:                                                                                                    |
+| ❗ **Other model integrations** ❗                                                                                                                            |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Currently, `askai` only supports integration with OpenAI. But as soon as other NLP API-endpoints start popping up, I will work on integrating them as well. |
 
@@ -38,7 +38,7 @@ OpenAI API key. Note that the key is only stored locally in `~/.askai/key`.
 askai init
 ```
 
-![init](https://github.com/maxvfischer/askai/blob/main/images/init.svg)
+![init](https://github.com/maxvfischer/askai/blob/main/images/init.svg?raw=True)
 
 ## Create OpenAI API-key
 
@@ -63,7 +63,7 @@ Ask a question using your saved config.
 ```
 askai "<QUESTION>"
 ```
-![conda](https://github.com/maxvfischer/askai/blob/main/images/question_conda.svg)
+![conda](https://github.com/maxvfischer/askai/blob/main/images/question_conda.svg?raw=True)
 
 
 ### Override config
@@ -72,7 +72,7 @@ It's possible to override the default config by using arguments:
 ```
 askai "<QUESTION>" --num-answers <INT> --model <MODEL_STRING> --temperature <FLOAT> --top_p <FLOAT> --max-tokens <INT> --frequency-penalty <FLOAT> --presence_penalty <FLOAT>
 ```
-![conda](https://github.com/maxvfischer/askai/blob/main/images/haiku.svg)
+![conda](https://github.com/maxvfischer/askai/blob/main/images/haiku.svg?raw=True)
 
 | **Argument**        | **Allowed values**               | **Description**                                                                                                                                                |
 |---------------------|----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
