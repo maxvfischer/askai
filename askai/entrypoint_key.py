@@ -1,4 +1,4 @@
-import click as click
+import click
 
 from .utils import KeyHelper, PrintHelper
 from .constants import API_KEY_PATH
