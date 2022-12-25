@@ -16,7 +16,9 @@ from .constants import (
     DEFAULT_TEMPERATURE,
     DEFAULT_TOP_P,
     DEFAULT_FREQUENCY_PENALTY,
-    DEFAULT_PRESENCE_PENALTY, MAX_INPUT_TRIES
+    DEFAULT_PRESENCE_PENALTY, MAX_INPUT_TRIES, OPENAI_NUM_ANSWERS_MIN, OPENAI_MAX_TOKENS_MIN, OPENAI_TEMPERATURE_MIN,
+    OPENAI_TEMPERATURE_MAX, OPENAI_TOP_P_MIN, OPENAI_TOP_P_MAX, OPENAI_FREQUENCY_PENALTY_MIN,
+    OPENAI_FREQUENCY_PENALTY_MAX, OPENAI_PRESENCE_PENALTY_MIN, OPENAI_PRESENCE_PENALTY_MAX
 )
 
 
@@ -27,8 +29,11 @@ class AvailableModels(Enum):
     TEXT_DAVINCI_003 = auto()
 
     @classmethod
-    def as_list(cls) -> list:
-        return list(map(lambda c: c.name.replace("_", "-").lower(), cls))
+    def members_as_list(cls, openai_style: bool = True) -> list:
+        if openai_style:
+            return list(map(lambda c: c.name.replace("_", "-").lower(), cls))
+        else:
+            return list(map(lambda c: c.name, cls))
 
 
 @dataclass
@@ -70,27 +75,39 @@ class ConfigHelper:
         click.echo()
 
     def input_num_answer(self) -> None:
-        self.num_answers = self._input_integer(default_value=DEFAULT_NUM_ANSWERS, predicate=lambda x: x > 0)
+        self.num_answers = self._input_integer(
+            default_value=DEFAULT_NUM_ANSWERS,
+            predicate=lambda x: x >= OPENAI_NUM_ANSWERS_MIN
+        )
 
     def input_max_token(self) -> None:
-        self.max_tokens = self._input_integer(default_value=DEFAULT_MAX_TOKENS, predicate=lambda x: x > 0)
+        self.max_tokens = self._input_integer(
+            default_value=DEFAULT_MAX_TOKENS,
+            predicate=lambda x: x >= OPENAI_MAX_TOKENS_MIN
+        )
 
     def input_temperature(self) -> None:
-        self.temperature = self._input_float(default_value=DEFAULT_TEMPERATURE, predicate=lambda x: 0.0 <= x <= 1.0)
+        self.temperature = self._input_float(
+            default_value=DEFAULT_TEMPERATURE,
+            predicate=lambda x: OPENAI_TEMPERATURE_MIN <= x <= OPENAI_TEMPERATURE_MAX
+        )
 
     def input_top_p(self) -> None:
-        self.top_p = self._input_float(default_value=DEFAULT_TOP_P, predicate=lambda x: 0.0 <= x <= 1.0)
+        self.top_p = self._input_float(
+            default_value=DEFAULT_TOP_P,
+            predicate=lambda x: OPENAI_TOP_P_MIN <= x <= OPENAI_TOP_P_MAX
+        )
 
     def input_frequency_penalty(self) -> None:
         self.frequency_penalty = self._input_float(
             default_value=DEFAULT_FREQUENCY_PENALTY,
-            predicate=lambda x: -2.0 <= x <= 2.0
+            predicate=lambda x: OPENAI_FREQUENCY_PENALTY_MIN <= x <= OPENAI_FREQUENCY_PENALTY_MAX
         )
 
     def input_presence_penalty(self) -> None:
         self.presence_penalty = self._input_float(
             default_value=DEFAULT_PRESENCE_PENALTY,
-            predicate=lambda x: -2.0 <= x <= 2.0
+            predicate=lambda x: OPENAI_PRESENCE_PENALTY_MIN <= x <= OPENAI_PRESENCE_PENALTY_MAX
         )
 
     def as_dict(self) -> dict:
@@ -352,7 +369,7 @@ class PrintHelper:
     @staticmethod
     def model() -> None:
         click.echo("   Different models have different capabilities.")
-        for idx, model_name in enumerate(AvailableModels.as_list()):
+        for idx, model_name in enumerate(AvailableModels.members_as_list(openai_style=True)):
             click.echo(f"   {idx+1}) {model_name}")
 
     @staticmethod
