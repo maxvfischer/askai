@@ -1,7 +1,10 @@
 import click
 import openai
 
-from .utils import KeyHelper, ConfigHelper, PrintHelper
+from .constants import OPENAI_NUM_ANSWERS_MIN, OPENAI_TEMPERATURE_MIN, OPENAI_TEMPERATURE_MAX, OPENAI_MAX_TOKENS_MIN, \
+    OPENAI_TOP_P_MIN, OPENAI_TOP_P_MAX, OPENAI_FREQUENCY_PENALTY_MIN, OPENAI_FREQUENCY_PENALTY_MAX, \
+    OPENAI_PRESENCE_PENALTY_MIN, OPENAI_PRESENCE_PENALTY_MAX
+from .utils import KeyHelper, ConfigHelper, PrintHelper, AvailableModels
 from .entrypoint_config import config
 from .entrypoint_init import init
 from .entrypoint_key import key
@@ -62,13 +65,13 @@ def askai() -> None:
 
 @askai.command(default_command=True)
 @click.argument("prompt")
-@click.option("-n", "--num-answers", type=int, help="Number of alternative answers")
-@click.option("-m", "--model", type=str, help="OpenAI model to use. E.g. `text-ada-001`")
-@click.option("-t", "--temperature", type=float, help="Temperature")
-@click.option("--max-tokens", type=int, help="Max tokens")
-@click.option("--top-p", type=float, help="Top p")
-@click.option("--frequency-penalty", type=int, help="Frequency penalty")
-@click.option("--presence-penalty", type=int, help="Presence penalty")
+@click.option("-n", "--num-answers", type=click.IntRange(min=OPENAI_NUM_ANSWERS_MIN), help="Number of alternative answers")
+@click.option("-m", "--model", type=click.Choice(choices=AvailableModels.members_as_list()), help="OpenAI model to use. E.g. `text-ada-001`")
+@click.option("-t", "--temperature", type=click.FloatRange(min=OPENAI_TEMPERATURE_MIN, max=OPENAI_TEMPERATURE_MAX), help="Temperature")
+@click.option("--max-tokens", type=click.IntRange(min=OPENAI_MAX_TOKENS_MIN), help="Max tokens")
+@click.option("--top-p", type=click.FloatRange(min=OPENAI_TOP_P_MIN, max=OPENAI_TOP_P_MAX), help="Top p")
+@click.option("--frequency-penalty", type=click.FloatRange(min=OPENAI_FREQUENCY_PENALTY_MIN, max=OPENAI_FREQUENCY_PENALTY_MAX), help="Frequency penalty")
+@click.option("--presence-penalty", type=click.FloatRange(min=OPENAI_PRESENCE_PENALTY_MIN, max=OPENAI_PRESENCE_PENALTY_MAX), help="Presence penalty")
 def ask(prompt: str,
         num_answers: int,
         model: str,
