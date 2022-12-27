@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import yaml
 import click
 import openai
@@ -47,9 +49,9 @@ class ConfigHelper:
     presence_penalty: float = DEFAULT_PRESENCE_PENALTY
 
     @classmethod
-    def from_file(cls) -> 'ConfigHelper':
-        if CONFIG_PATH.is_file():
-            with open(CONFIG_PATH, "r") as f:
+    def from_file(cls, config_path: Path = CONFIG_PATH) -> 'ConfigHelper':
+        if config_path.is_file():
+            with open(config_path, "r") as f:
                 config = yaml.safe_load(f)
                 return cls(**config)
         else:
@@ -57,12 +59,12 @@ class ConfigHelper:
                                     "Run 'askai config reset' to create a default config.", fg="red"))
             exit()
 
-    def input_model(self) -> None:
+    def input_model(self, max_input_tries: int = MAX_INPUT_TRIES) -> None:
         model = input("Choose model (1-4): ")
         num_of_tries = 1
 
         while not _is_int(model) or int(model) not in range(1, 5):
-            if num_of_tries >= MAX_INPUT_TRIES:
+            if num_of_tries >= max_input_tries:
                 click.echo(click.style("Too many invalid tries. Aborted!", fg="red"))
                 exit(1)
 
@@ -74,56 +76,84 @@ class ConfigHelper:
         click.echo(click.style(f"Model chosen: {self.model}", fg="green"))
         click.echo()
 
-    def input_num_answer(self) -> None:
+    def input_num_answer(self,
+                         default_value: int = DEFAULT_NUM_ANSWERS,
+                         min_value: int = OPENAI_NUM_ANSWERS_MIN,
+                         max_input_tries: int = MAX_INPUT_TRIES) -> None:
         self.num_answers = self._input_integer(
-            default_value=DEFAULT_NUM_ANSWERS,
-            predicate=lambda x: x >= OPENAI_NUM_ANSWERS_MIN
+            default_value=default_value,
+            predicate=lambda x: x >= min_value,
+            max_input_tries=max_input_tries
         )
 
-    def input_max_token(self) -> None:
+    def input_max_token(self,
+                        default_value: int = DEFAULT_MAX_TOKENS,
+                        min_value: int = OPENAI_MAX_TOKENS_MIN,
+                        max_input_tries: int = MAX_INPUT_TRIES) -> None:
         self.max_tokens = self._input_integer(
-            default_value=DEFAULT_MAX_TOKENS,
-            predicate=lambda x: x >= OPENAI_MAX_TOKENS_MIN
+            default_value=default_value,
+            predicate=lambda x: x >= min_value,
+            max_input_tries=max_input_tries
         )
 
-    def input_temperature(self) -> None:
+    def input_temperature(self,
+                          default_value: float = DEFAULT_TEMPERATURE,
+                          min_value: float = OPENAI_TEMPERATURE_MIN,
+                          max_value: float = OPENAI_TEMPERATURE_MAX,
+                          max_input_tries: int = MAX_INPUT_TRIES) -> None:
         self.temperature = self._input_float(
-            default_value=DEFAULT_TEMPERATURE,
-            predicate=lambda x: OPENAI_TEMPERATURE_MIN <= x <= OPENAI_TEMPERATURE_MAX
+            default_value=default_value,
+            predicate=lambda x: min_value <= x <= max_value,
+            max_input_tries=max_input_tries
         )
 
-    def input_top_p(self) -> None:
+    def input_top_p(self,
+                    default_value: float = DEFAULT_TOP_P,
+                    min_value: float = OPENAI_TOP_P_MIN,
+                    max_value: float = OPENAI_TOP_P_MAX,
+                    max_input_tries: int = MAX_INPUT_TRIES) -> None:
         self.top_p = self._input_float(
-            default_value=DEFAULT_TOP_P,
-            predicate=lambda x: OPENAI_TOP_P_MIN <= x <= OPENAI_TOP_P_MAX
+            default_value=default_value,
+            predicate=lambda x: min_value <= x <= max_value,
+            max_input_tries=max_input_tries
         )
 
-    def input_frequency_penalty(self) -> None:
+    def input_frequency_penalty(self,
+                                default_value: float = DEFAULT_FREQUENCY_PENALTY,
+                                min_value: float = OPENAI_FREQUENCY_PENALTY_MIN,
+                                max_value: float = OPENAI_FREQUENCY_PENALTY_MAX,
+                                max_input_tries: int = MAX_INPUT_TRIES) -> None:
         self.frequency_penalty = self._input_float(
-            default_value=DEFAULT_FREQUENCY_PENALTY,
-            predicate=lambda x: OPENAI_FREQUENCY_PENALTY_MIN <= x <= OPENAI_FREQUENCY_PENALTY_MAX
+            default_value=default_value,
+            predicate=lambda x: min_value <= x <= max_value,
+            max_input_tries=max_input_tries
         )
 
-    def input_presence_penalty(self) -> None:
+    def input_presence_penalty(self,
+                               default_value: float = DEFAULT_PRESENCE_PENALTY,
+                               min_value: float = OPENAI_PRESENCE_PENALTY_MIN,
+                               max_value: float = OPENAI_PRESENCE_PENALTY_MAX,
+                               max_input_tries: int = MAX_INPUT_TRIES) -> None:
         self.presence_penalty = self._input_float(
-            default_value=DEFAULT_PRESENCE_PENALTY,
-            predicate=lambda x: OPENAI_PRESENCE_PENALTY_MIN <= x <= OPENAI_PRESENCE_PENALTY_MAX
+            default_value=default_value,
+            predicate=lambda x: min_value <= x <= max_value,
+            max_input_tries=max_input_tries
         )
 
     def as_dict(self) -> dict:
         return asdict(self)
 
-    def update(self) -> None:
+    def update(self, config_path: Path = CONFIG_PATH) -> None:
         config = self.as_dict()
-        with open(CONFIG_PATH, "w") as f:
+        with open(config_path, "w") as f:
             yaml.dump(config, f)
 
         click.echo(click.style("Config updated successfully!", fg="green"))
 
     @staticmethod
-    def reset() -> None:
+    def reset(config_path: Path = CONFIG_PATH) -> None:
         config = ConfigHelper().as_dict()  # Create config with default values
-        with open(CONFIG_PATH, "w") as f:
+        with open(config_path, "w") as f:
             yaml.dump(config, f)
 
         click.echo("\nDefault config has been created with the following values:")
@@ -133,12 +163,12 @@ class ConfigHelper:
         click.echo("To change the config, please see: 'askai config --help'\n")
 
     @staticmethod
-    def show() -> None:
-        if not CONFIG_PATH.is_file():
+    def show(config_path: Path = CONFIG_PATH) -> None:
+        if not config_path.is_file():
             click.echo("No config exists. Please reset the config ('askai config reset') "
                        "or see 'askai config --help'.\n")
         else:
-            with open(CONFIG_PATH, "r") as f:
+            with open(config_path, "r") as f:
                 try:
                     config = yaml.safe_load(f)
                     for key, value in config.items():
@@ -148,8 +178,9 @@ class ConfigHelper:
 
     @staticmethod
     def _input_integer(default_value: int,
-                       predicate: Callable[[int], bool] = lambda x: True) -> int:
-        for _ in range(MAX_INPUT_TRIES):
+                       predicate: Callable[[int], bool] = lambda x: True,
+                       max_input_tries: int = MAX_INPUT_TRIES) -> int:
+        for _ in range(max_input_tries):
             input_value = input(f"Choose (press enter for default = {default_value}): ")
 
             if input_value == "":
@@ -173,8 +204,9 @@ class ConfigHelper:
 
     @staticmethod
     def _input_float(default_value: float,
-                     predicate: Callable[[float], bool] = lambda x: True) -> float:
-        for _ in range(MAX_INPUT_TRIES):
+                     predicate: Callable[[float], bool] = lambda x: True,
+                     max_input_tries: int = MAX_INPUT_TRIES) -> float:
+        for _ in range(max_input_tries):
             input_value = input(f"Choose (press enter for default = {default_value}): ")
 
             if input_value == "":
