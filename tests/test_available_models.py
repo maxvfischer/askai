@@ -22,4 +22,3 @@ def test_members_as_list_openai_style() -> None:
     assert len(AvailableModels) == len(enum_list)
     for name in AvailableModels.__members__:
         assert name.replace("_", "-").lower() in enum_list
-

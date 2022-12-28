@@ -18,9 +18,18 @@ from .constants import (
     DEFAULT_TEMPERATURE,
     DEFAULT_TOP_P,
     DEFAULT_FREQUENCY_PENALTY,
-    DEFAULT_PRESENCE_PENALTY, MAX_INPUT_TRIES, OPENAI_NUM_ANSWERS_MIN, OPENAI_MAX_TOKENS_MIN, OPENAI_TEMPERATURE_MIN,
-    OPENAI_TEMPERATURE_MAX, OPENAI_TOP_P_MIN, OPENAI_TOP_P_MAX, OPENAI_FREQUENCY_PENALTY_MIN,
-    OPENAI_FREQUENCY_PENALTY_MAX, OPENAI_PRESENCE_PENALTY_MIN, OPENAI_PRESENCE_PENALTY_MAX
+    DEFAULT_PRESENCE_PENALTY,
+    MAX_INPUT_TRIES,
+    OPENAI_NUM_ANSWERS_MIN,
+    OPENAI_MAX_TOKENS_MIN,
+    OPENAI_TEMPERATURE_MIN,
+    OPENAI_TEMPERATURE_MAX,
+    OPENAI_TOP_P_MIN,
+    OPENAI_TOP_P_MAX,
+    OPENAI_FREQUENCY_PENALTY_MIN,
+    OPENAI_FREQUENCY_PENALTY_MAX,
+    OPENAI_PRESENCE_PENALTY_MIN,
+    OPENAI_PRESENCE_PENALTY_MAX,
 )
 
 
@@ -49,14 +58,19 @@ class ConfigHelper:
     presence_penalty: float = DEFAULT_PRESENCE_PENALTY
 
     @classmethod
-    def from_file(cls, config_path: Path = CONFIG_PATH) -> 'ConfigHelper':
+    def from_file(cls, config_path: Path = CONFIG_PATH) -> "ConfigHelper":
         if config_path.is_file():
             with open(config_path, "r") as f:
                 config = yaml.safe_load(f)
                 return cls(**config)
         else:
-            click.echo(click.style("No config file found, can't initialize config. "
-                                    "Run 'askai config reset' to create a default config.", fg="red"))
+            click.echo(
+                click.style(
+                    "No config file found, can't initialize config. "
+                    "Run 'askai config reset' to create a default config.",
+                    fg="red",
+                )
+            )
             exit()
 
     def input_model(self, max_input_tries: int = MAX_INPUT_TRIES) -> None:
@@ -76,68 +90,80 @@ class ConfigHelper:
         click.echo(click.style(f"Model chosen: {self.model}", fg="green"))
         click.echo()
 
-    def input_num_answer(self,
-                         default_value: int = DEFAULT_NUM_ANSWERS,
-                         min_value: int = OPENAI_NUM_ANSWERS_MIN,
-                         max_input_tries: int = MAX_INPUT_TRIES) -> None:
+    def input_num_answer(
+        self,
+        default_value: int = DEFAULT_NUM_ANSWERS,
+        min_value: int = OPENAI_NUM_ANSWERS_MIN,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> None:
         self.num_answers = self._input_integer(
             default_value=default_value,
             predicate=lambda x: x >= min_value,
-            max_input_tries=max_input_tries
+            max_input_tries=max_input_tries,
         )
 
-    def input_max_token(self,
-                        default_value: int = DEFAULT_MAX_TOKENS,
-                        min_value: int = OPENAI_MAX_TOKENS_MIN,
-                        max_input_tries: int = MAX_INPUT_TRIES) -> None:
+    def input_max_token(
+        self,
+        default_value: int = DEFAULT_MAX_TOKENS,
+        min_value: int = OPENAI_MAX_TOKENS_MIN,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> None:
         self.max_tokens = self._input_integer(
             default_value=default_value,
             predicate=lambda x: x >= min_value,
-            max_input_tries=max_input_tries
+            max_input_tries=max_input_tries,
         )
 
-    def input_temperature(self,
-                          default_value: float = DEFAULT_TEMPERATURE,
-                          min_value: float = OPENAI_TEMPERATURE_MIN,
-                          max_value: float = OPENAI_TEMPERATURE_MAX,
-                          max_input_tries: int = MAX_INPUT_TRIES) -> None:
+    def input_temperature(
+        self,
+        default_value: float = DEFAULT_TEMPERATURE,
+        min_value: float = OPENAI_TEMPERATURE_MIN,
+        max_value: float = OPENAI_TEMPERATURE_MAX,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> None:
         self.temperature = self._input_float(
             default_value=default_value,
             predicate=lambda x: min_value <= x <= max_value,
-            max_input_tries=max_input_tries
+            max_input_tries=max_input_tries,
         )
 
-    def input_top_p(self,
-                    default_value: float = DEFAULT_TOP_P,
-                    min_value: float = OPENAI_TOP_P_MIN,
-                    max_value: float = OPENAI_TOP_P_MAX,
-                    max_input_tries: int = MAX_INPUT_TRIES) -> None:
+    def input_top_p(
+        self,
+        default_value: float = DEFAULT_TOP_P,
+        min_value: float = OPENAI_TOP_P_MIN,
+        max_value: float = OPENAI_TOP_P_MAX,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> None:
         self.top_p = self._input_float(
             default_value=default_value,
             predicate=lambda x: min_value <= x <= max_value,
-            max_input_tries=max_input_tries
+            max_input_tries=max_input_tries,
         )
 
-    def input_frequency_penalty(self,
-                                default_value: float = DEFAULT_FREQUENCY_PENALTY,
-                                min_value: float = OPENAI_FREQUENCY_PENALTY_MIN,
-                                max_value: float = OPENAI_FREQUENCY_PENALTY_MAX,
-                                max_input_tries: int = MAX_INPUT_TRIES) -> None:
+    def input_frequency_penalty(
+        self,
+        default_value: float = DEFAULT_FREQUENCY_PENALTY,
+        min_value: float = OPENAI_FREQUENCY_PENALTY_MIN,
+        max_value: float = OPENAI_FREQUENCY_PENALTY_MAX,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> None:
         self.frequency_penalty = self._input_float(
             default_value=default_value,
             predicate=lambda x: min_value <= x <= max_value,
-            max_input_tries=max_input_tries
+            max_input_tries=max_input_tries,
         )
 
-    def input_presence_penalty(self,
-                               default_value: float = DEFAULT_PRESENCE_PENALTY,
-                               min_value: float = OPENAI_PRESENCE_PENALTY_MIN,
-                               max_value: float = OPENAI_PRESENCE_PENALTY_MAX,
-                               max_input_tries: int = MAX_INPUT_TRIES) -> None:
+    def input_presence_penalty(
+        self,
+        default_value: float = DEFAULT_PRESENCE_PENALTY,
+        min_value: float = OPENAI_PRESENCE_PENALTY_MIN,
+        max_value: float = OPENAI_PRESENCE_PENALTY_MAX,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> None:
         self.presence_penalty = self._input_float(
             default_value=default_value,
             predicate=lambda x: min_value <= x <= max_value,
-            max_input_tries=max_input_tries
+            max_input_tries=max_input_tries,
         )
 
     def as_dict(self) -> dict:
@@ -159,14 +185,18 @@ class ConfigHelper:
         click.echo("\nDefault config has been created with the following values:")
         for key, value in config.items():
             click.echo(f"  * {key}={value}")
-        click.echo(click.style("Successfully set config to default values\n", fg="green"))
+        click.echo(
+            click.style("Successfully set config to default values\n", fg="green")
+        )
         click.echo("To change the config, please see: 'askai config --help'\n")
 
     @staticmethod
     def show(config_path: Path = CONFIG_PATH) -> None:
         if not config_path.is_file():
-            click.echo("No config exists. Please reset the config ('askai config reset') "
-                       "or see 'askai config --help'.\n")
+            click.echo(
+                "No config exists. Please reset the config ('askai config reset') "
+                "or see 'askai config --help'.\n"
+            )
         else:
             with open(config_path, "r") as f:
                 try:
@@ -174,12 +204,16 @@ class ConfigHelper:
                     for key, value in config.items():
                         click.echo(f"{key}: {value}")
                 except yaml.YAMLError:
-                    click.echo("Something is wrong with the config. Please reset the config: 'askai config reset'")
+                    click.echo(
+                        "Something is wrong with the config. Please reset the config: 'askai config reset'"
+                    )
 
     @staticmethod
-    def _input_integer(default_value: int,
-                       predicate: Callable[[int], bool] = lambda x: True,
-                       max_input_tries: int = MAX_INPUT_TRIES) -> int:
+    def _input_integer(
+        default_value: int,
+        predicate: Callable[[int], bool] = lambda x: True,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> int:
         for _ in range(max_input_tries):
             input_value = input(f"Choose (press enter for default = {default_value}): ")
 
@@ -192,7 +226,9 @@ class ConfigHelper:
                 click.echo(click.style("Input is not an integer.\n", fg="red"))
                 continue
             elif not predicate(int(input_value)):
-                click.echo(click.style("Input is not within allowed range.\n", fg="red"))
+                click.echo(
+                    click.style("Input is not within allowed range.\n", fg="red")
+                )
                 continue
 
             click.echo(click.style(f"Value chosen: {input_value}", fg="green"))
@@ -203,9 +239,11 @@ class ConfigHelper:
         exit(1)
 
     @staticmethod
-    def _input_float(default_value: float,
-                     predicate: Callable[[float], bool] = lambda x: True,
-                     max_input_tries: int = MAX_INPUT_TRIES) -> float:
+    def _input_float(
+        default_value: float,
+        predicate: Callable[[float], bool] = lambda x: True,
+        max_input_tries: int = MAX_INPUT_TRIES,
+    ) -> float:
         for _ in range(max_input_tries):
             input_value = input(f"Choose (press enter for default = {default_value}): ")
 
@@ -218,7 +256,9 @@ class ConfigHelper:
                 click.echo(click.style("Input is not a float.\n", fg="red"))
                 continue
             elif not predicate(float(input_value)):
-                click.echo(click.style("Input is not within allowed range.\n", fg="red"))
+                click.echo(
+                    click.style("Input is not within allowed range.\n", fg="red")
+                )
                 continue
 
             click.echo(click.style(f"Value chosen: {input_value}", fg="green"))
@@ -264,8 +304,13 @@ class KeyHelper:
                 api_key = f.read().strip()
             return api_key
         else:
-            click.echo(click.style("No API-key found, can't answer question. "
-                                   "Please add a key ('askai key add') or initialize ('askai init').", fg="red"))
+            click.echo(
+                click.style(
+                    "No API-key found, can't answer question. "
+                    "Please add a key ('askai key add') or initialize ('askai init').",
+                    fg="red",
+                )
+            )
             exit()
 
     @staticmethod
@@ -280,109 +325,124 @@ class KeyHelper:
 
 
 class PrintHelper:
-
     @staticmethod
     def logo() -> None:
-        click.echo("\n"
-                   "██████████   ██████████   ███   ███  ██████████   ███\n"
-                   "███    ███   ███    ███   ███   ███  ███    ███\n"
-                   "███    ███   ███    ███   ███  ███   ███    ███\n"
-                   "███    ███   ███    ███   ███▐███    ███    ███    ▄█\n"
-                   "███    ███   ███          █████▀     ███    ███   ███\n"
-                   "██████████   ██████████   █████▄     ██████████   ███▌\n"
-                   "███    ███          ███   ███▐███    ███    ███   ███▌\n"
-                   "███    ███          ███   ███  ███   ███    ███   ███\n"
-                   "███    ███   ██████████   ███   ███  ███    ███   █▀\n"
-                   "\n"
-                   "    ~~~~~~~ Your simple terminal helper ~~~~~~~\n")
+        click.echo(
+            "\n"
+            "██████████   ██████████   ███   ███  ██████████   ███\n"
+            "███    ███   ███    ███   ███   ███  ███    ███\n"
+            "███    ███   ███    ███   ███  ███   ███    ███\n"
+            "███    ███   ███    ███   ███▐███    ███    ███    ▄█\n"
+            "███    ███   ███          █████▀     ███    ███   ███\n"
+            "██████████   ██████████   █████▄     ██████████   ███▌\n"
+            "███    ███          ███   ███▐███    ███    ███   ███▌\n"
+            "███    ███          ███   ███  ███   ███    ███   ███\n"
+            "███    ███   ██████████   ███   ███  ███    ███   █▀\n"
+            "\n"
+            "    ~~~~~~~ Your simple terminal helper ~~~~~~~\n"
+        )
 
     @staticmethod
     def help_what_is_askai() -> None:
-        click.echo("What is askai?\n"
-                   "  askai is a simple CLI integration with the worlds most powerful \n"
-                   "  and capable AI-model, OpenAI GPT3. This gives you the ability to \n"
-                   "  interact with these models straight from your terminal.\n"
-                   "\n"
-                   "What can it be used for?\n"
-                   "  askai enables you to ask any free-text question you want.\n"
-                   "\n"
-                   "  For example:\n"
-                   "\n"
-                   "    > askai \"What is the curl command to download html from a url?\"\n"
-                   "    > askai \"How do you remove '\\n' from the beginning of a string using Python?\"\n"
-                   "    > askai \"List the top 3 most common Python packages used to parse json-files\""
-                   "\n")
+        click.echo(
+            "What is askai?\n"
+            "  askai is a simple CLI integration with the worlds most powerful \n"
+            "  and capable AI-model, OpenAI GPT3. This gives you the ability to \n"
+            "  interact with these models straight from your terminal.\n"
+            "\n"
+            "What can it be used for?\n"
+            "  askai enables you to ask any free-text question you want.\n"
+            "\n"
+            "  For example:\n"
+            "\n"
+            '    > askai "What is the curl command to download html from a url?"\n'
+            "    > askai \"How do you remove '\\n' from the beginning of a string using Python?\"\n"
+            '    > askai "List the top 3 most common Python packages used to parse json-files"'
+            "\n"
+        )
 
     @staticmethod
     def help_does_it_cost() -> None:
-        click.echo("Does it cost anything?\n"
-                   "  Yes (after the free OpenAI quota is used).\n"
-                   "\n"
-                   "  askai is using your OpenAI API-key to generate the answers to your questions.\n"
-                   "  When creating a new account at OpenAI, you will get $18 of requests for free.\n"
-                   "  After you've consumed the free quota, you need to add payment info to your \n"
-                   "  OpenAI account to continue to use askai.\n")
-    
+        click.echo(
+            "Does it cost anything?\n"
+            "  Yes (after the free OpenAI quota is used).\n"
+            "\n"
+            "  askai is using your OpenAI API-key to generate the answers to your questions.\n"
+            "  When creating a new account at OpenAI, you will get $18 of requests for free.\n"
+            "  After you've consumed the free quota, you need to add payment info to your \n"
+            "  OpenAI account to continue to use askai.\n"
+        )
+
     @staticmethod
     def help_requirements() -> None:
-        click.echo("Requirements:\n"
-                   "  * Create an OpenAI account and generate an API-key\n"
-                   "  * Run 'askai init' to add you API key and setup the default config.\n")
+        click.echo(
+            "Requirements:\n"
+            "  * Create an OpenAI account and generate an API-key\n"
+            "  * Run 'askai init' to add you API key and setup the default config.\n"
+        )
 
     @staticmethod
     def help_main_command_options() -> None:
-        click.echo("Override config:\n"
-                   "  askai \"<QUESTION>\" <OPTION> <VALUE>\n"
-                   "\n"
-                   "  --num-answers or -n\n"
-                   "    Number of answers to generate. Note that more answers consume more tokens.\n"
-                   "    Allowed values: >0\n"
-                   "\n"
-                   "  --model or -m\n"
-                   "    Which model to use. See list of available models below.\n"
-                   "\n"
-                   "  --temperature or -t\n"
-                   "    What sampling temperature to use. Higher value makes the model more \"creative\".\n"
-                   "    Do not use at the same time as top-p.\n"
-                   "    Allowed values: 0.0 <= temperature <= 1.0\n"
-                   "\n"
-                   "  --top-p"
-                   "    What sampling nucleus to use. The model considers the results of the tokens with \n"
-                   "    top_p probability mass. Do not use at the same time as temperature.\n"
-                   "    Allowed values: 0.0 <= top_p <= 1.0\n"
-                   "\n"
-                   "  --max-tokens\n"
-                   "    Maximum number of tokens used per question (incl. question + answer).\n"
-                   "    Allowed values: >0\n"
-                   "\n"
-                   "  --frequency-penalty\n"
-                   "    Positive values penalize new tokens based on whether they appear in the text so \n"
-                   "    far, increasing the model's likelihood to talk about new topics.\n"
-                   "    Allowed values: -2.0 <= frequency_penalty <= 2.0\n"
-                   "\n"
-                   "  --presence-penalty\n"
-                   "    Positive values penalize new tokens based on their existing frequency in the text \n"
-                   "    so far, decreasing the model's likelihood to repeat the same line verbatim.\n"
-                   "    Allowed values: -2.0 <= presence_penalty <= 2.0\n"
-                   "\n")
+        click.echo(
+            "Override config:\n"
+            '  askai "<QUESTION>" <OPTION> <VALUE>\n'
+            "\n"
+            "  --num-answers or -n\n"
+            "    Number of answers to generate. Note that more answers consume more tokens.\n"
+            "    Allowed values: >0\n"
+            "\n"
+            "  --model or -m\n"
+            "    Which model to use. See list of available models below.\n"
+            "\n"
+            "  --temperature or -t\n"
+            '    What sampling temperature to use. Higher value makes the model more "creative".\n'
+            "    Do not use at the same time as top-p.\n"
+            "    Allowed values: 0.0 <= temperature <= 1.0\n"
+            "\n"
+            "  --top-p"
+            "    What sampling nucleus to use. The model considers the results of the tokens with \n"
+            "    top_p probability mass. Do not use at the same time as temperature.\n"
+            "    Allowed values: 0.0 <= top_p <= 1.0\n"
+            "\n"
+            "  --max-tokens\n"
+            "    Maximum number of tokens used per question (incl. question + answer).\n"
+            "    Allowed values: >0\n"
+            "\n"
+            "  --frequency-penalty\n"
+            "    Positive values penalize new tokens based on whether they appear in the text so \n"
+            "    far, increasing the model's likelihood to talk about new topics.\n"
+            "    Allowed values: -2.0 <= frequency_penalty <= 2.0\n"
+            "\n"
+            "  --presence-penalty\n"
+            "    Positive values penalize new tokens based on their existing frequency in the text \n"
+            "    so far, decreasing the model's likelihood to repeat the same line verbatim.\n"
+            "    Allowed values: -2.0 <= presence_penalty <= 2.0\n"
+            "\n"
+        )
 
     @staticmethod
     def help_commands() -> None:
-        click.echo("Commands:\n"
-                   "  config  Handle your config.\n"
-                   "  init    Initialize askai.\n"
-                   "  key     Update or remove your API key.")
-    
+        click.echo(
+            "Commands:\n"
+            "  config  Handle your config.\n"
+            "  init    Initialize askai.\n"
+            "  key     Update or remove your API key."
+        )
+
     @staticmethod
     def key() -> None:
-        click.echo("To use the CLI, please enter your OpenAI API key. The key can be generated by \n"
-                    "creating an account at https://openai.com/api/\n"
-                    "\n"
-                    "The key will only be stored locally in `~/.askai/key`.\n")
+        click.echo(
+            "To use the CLI, please enter your OpenAI API key. The key can be generated by \n"
+            "creating an account at https://openai.com/api/\n"
+            "\n"
+            "The key will only be stored locally in `~/.askai/key`.\n"
+        )
 
     @staticmethod
     def key_exists() -> None:
-        click.echo("NOTE: You've already added a key. This old key will be overwritten in this setup!\n")
+        click.echo(
+            "NOTE: You've already added a key. This old key will be overwritten in this setup!\n"
+        )
 
     @staticmethod
     def no_key() -> None:
@@ -390,9 +450,11 @@ class PrintHelper:
 
     @staticmethod
     def update_config() -> None:
-        click.echo("NOTE: You're about to update the default config of askai. This will have an effect on "
-                   "how the answers are generated. Make sure that you are well-informed around these effects. "
-                   "You can read more here: https://beta.openai.com/docs/api-reference/completions/create\n")
+        click.echo(
+            "NOTE: You're about to update the default config of askai. This will have an effect on "
+            "how the answers are generated. Make sure that you are well-informed around these effects. "
+            "You can read more here: https://beta.openai.com/docs/api-reference/completions/create\n"
+        )
 
     @staticmethod
     def step(step: int, description: str) -> None:
@@ -401,52 +463,66 @@ class PrintHelper:
     @staticmethod
     def model() -> None:
         click.echo("   Different models have different capabilities.")
-        for idx, model_name in enumerate(AvailableModels.members_as_list(openai_style=True)):
+        for idx, model_name in enumerate(
+            AvailableModels.members_as_list(openai_style=True)
+        ):
             click.echo(f"   {idx+1}) {model_name}")
 
     @staticmethod
     def num_answers() -> None:
-        click.echo("   This is the number of answers that will be displayed when you ask \n"
-                   "   a question. A high number will use more tokens.\n\n"
-                   "   Allowed values: >0\n")
+        click.echo(
+            "   This is the number of answers that will be displayed when you ask \n"
+            "   a question. A high number will use more tokens.\n\n"
+            "   Allowed values: >0\n"
+        )
 
     @staticmethod
     def max_tokens() -> None:
-        click.echo("   Maximum number of tokens used, including question (prompt)\n"
-                   "   and generated answers. A too low number might cut your answers shortly.\n\n"
-                   "   Allowed values: >0\n")
+        click.echo(
+            "   Maximum number of tokens used, including question (prompt)\n"
+            "   and generated answers. A too low number might cut your answers shortly.\n\n"
+            "   Allowed values: >0\n"
+        )
 
     @staticmethod
     def temperature() -> None:
-        click.echo("   Sampling temperature to use. Higher values means \n"
-                   "   the model will take more risks. Try 0.9 for more \n"
-                   "   creative applications, and 0 for ones with a well-defined \n"
-                   "   answer.\n\n"
-                   "   Allowed values: 0.0 <= temperature <= 1.0\n")
+        click.echo(
+            "   Sampling temperature to use. Higher values means \n"
+            "   the model will take more risks. Try 0.9 for more \n"
+            "   creative applications, and 0 for ones with a well-defined \n"
+            "   answer.\n\n"
+            "   Allowed values: 0.0 <= temperature <= 1.0\n"
+        )
 
     @staticmethod
     def top_p() -> None:
-        click.echo("   An alternative to sampling with temperature, called \n"
-                   "   nucleus sampling, where the model considers the results \n"
-                   "   of the tokens with top_p probability mass. So 0.1 means \n"
-                   "   only the tokens comprising the top 10% probability mass \n"
-                   "   are considered.\n"
-                   "   It's generally recommend altering this or temperature, but not both!\n\n"
-                   "   Allowed values: 0.0 <= top_p <= 1.0\n")
+        click.echo(
+            "   An alternative to sampling with temperature, called \n"
+            "   nucleus sampling, where the model considers the results \n"
+            "   of the tokens with top_p probability mass. So 0.1 means \n"
+            "   only the tokens comprising the top 10% probability mass \n"
+            "   are considered.\n"
+            "   It's generally recommend altering this or temperature, but not both!\n\n"
+            "   Allowed values: 0.0 <= top_p <= 1.0\n"
+        )
 
     @staticmethod
     def frequency_penalty() -> None:
-        click.echo("   Positive values penalize new tokens based on their existing \n"
-                   "   frequency in the text so far, decreasing the model's likelihood \n"
-                   "   to repeat the same line verbatim.\n\n"
-                   "   Allowed values: -2.0 <= frequency penalty <= 2.0\n")
+        click.echo(
+            "   Positive values penalize new tokens based on their existing \n"
+            "   frequency in the text so far, decreasing the model's likelihood \n"
+            "   to repeat the same line verbatim.\n\n"
+            "   Allowed values: -2.0 <= frequency penalty <= 2.0\n"
+        )
 
     @staticmethod
     def presence_penalty() -> None:
-        click.echo("   Positive values penalize new tokens based on whether they appear \n"
-                   "   in the text so far, increasing the model's likelihood to talk about \n"
-                   "   new topics.\n\n"
-                   "   Allowed values: -2.0 <= presence penalty <= 2.0\n")
+        click.echo(
+            "   Positive values penalize new tokens based on whether they appear \n"
+            "   in the text so far, increasing the model's likelihood to talk about \n"
+            "   new topics.\n\n"
+            "   Allowed values: -2.0 <= presence penalty <= 2.0\n"
+        )
 
     @staticmethod
     def print_response(response: OpenAIObject) -> None:

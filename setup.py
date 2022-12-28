@@ -6,7 +6,7 @@ setup(
     version="1.0.3",
     author="Max Fischer",
     description="Your simple terminal helper",
-    long_description=open('README.md').read(),
+    long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     license="MIT",
     url="https://github.com/maxvfischer/askai",
@@ -20,5 +20,5 @@ setup(
     entry_points="""
         [console_scripts]
         askai=askai.entrypoint_askai:askai
-    """
+    """,
 )

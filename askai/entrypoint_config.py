@@ -11,7 +11,9 @@ def config() -> None:
 
 @config.command(help="Reset the config to default")
 def reset() -> None:
-    user_verification = input("Do you want to reset your config to the default values? [y/Y]? ")
+    user_verification = input(
+        "Do you want to reset your config to the default values? [y/Y]? "
+    )
 
     if user_verification.lower() in ["y", "yes"]:
         ConfigHelper().reset()
@@ -38,7 +40,9 @@ def update_all() -> None:
     PrintHelper.model()
     config_helper.input_model()
 
-    PrintHelper.step(step=2, description="SET NUMBER OF ALTERNATIVE ANSWERS GENERATED PER QUESTION")
+    PrintHelper.step(
+        step=2, description="SET NUMBER OF ALTERNATIVE ANSWERS GENERATED PER QUESTION"
+    )
     PrintHelper.num_answers()
     config_helper.input_num_answer()
 
