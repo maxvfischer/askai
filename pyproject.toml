@@ -5,7 +5,7 @@ requires = [
 ]
 
 [tool.black]
-target-version = ['py38', 'py39']
+target-version = ['py39', 'py310']
 exclude = '''
 (
     asv_bench/env
