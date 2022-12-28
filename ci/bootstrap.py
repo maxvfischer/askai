@@ -74,7 +74,9 @@ def main():
             universal_newlines=True,
         ).splitlines()
     ]
-    tox_environments = [line for line in tox_environments if line.startswith("py")]
+    tox_environments = [
+        line for line in tox_environments if line.startswith("py")
+    ]
 
     for root, _, files in os.walk(templates_path):
         for name in files:

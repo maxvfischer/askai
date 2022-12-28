@@ -200,7 +200,9 @@ def test_input_min_max_out_of_range(
         ConfigHelper().input_max_token,
     ],
 )
-def test_input_min_out_of_range(monkeypatch: MonkeyPatch, input_func: Callable) -> None:
+def test_input_min_out_of_range(
+    monkeypatch: MonkeyPatch, input_func: Callable
+) -> None:
     user_input_too_low = "1.0"
     min_value = float(user_input_too_low) + 1.0
 

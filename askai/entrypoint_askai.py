@@ -88,11 +88,15 @@ def askai() -> None:
 @click.option(
     "-t",
     "--temperature",
-    type=click.FloatRange(min=OPENAI_TEMPERATURE_MIN, max=OPENAI_TEMPERATURE_MAX),
+    type=click.FloatRange(
+        min=OPENAI_TEMPERATURE_MIN, max=OPENAI_TEMPERATURE_MAX
+    ),
     help="Temperature",
 )
 @click.option(
-    "--max-tokens", type=click.IntRange(min=OPENAI_MAX_TOKENS_MIN), help="Max tokens"
+    "--max-tokens",
+    type=click.IntRange(min=OPENAI_MAX_TOKENS_MIN),
+    help="Max tokens",
 )
 @click.option(
     "--top-p",

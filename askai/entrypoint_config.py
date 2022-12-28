@@ -41,7 +41,8 @@ def update_all() -> None:
     config_helper.input_model()
 
     PrintHelper.step(
-        step=2, description="SET NUMBER OF ALTERNATIVE ANSWERS GENERATED PER QUESTION"
+        step=2,
+        description="SET NUMBER OF ALTERNATIVE ANSWERS GENERATED PER QUESTION",
     )
     PrintHelper.num_answers()
     config_helper.input_num_answer()
@@ -77,7 +78,9 @@ def model() -> None:
     config_helper.update()
 
 
-@update.command(help="Update number of altenative answers generated per question")
+@update.command(
+    help="Update number of altenative answers generated per question"
+)
 def num_answers() -> None:
     PrintHelper.num_answers()
     config_helper = ConfigHelper.from_file()

@@ -79,7 +79,9 @@ class ConfigHelper:
 
         while not _is_int(model) or int(model) not in range(1, 5):
             if num_of_tries >= max_input_tries:
-                click.echo(click.style("Too many invalid tries. Aborted!", fg="red"))
+                click.echo(
+                    click.style("Too many invalid tries. Aborted!", fg="red")
+                )
                 exit(1)
 
             click.echo(click.style("Choose value between 1 and 4.", fg="red"))
@@ -182,11 +184,15 @@ class ConfigHelper:
         with open(config_path, "w") as f:
             yaml.dump(config, f)
 
-        click.echo("\nDefault config has been created with the following values:")
+        click.echo(
+            "\nDefault config has been created with the following values:"
+        )
         for key, value in config.items():
             click.echo(f"  * {key}={value}")
         click.echo(
-            click.style("Successfully set config to default values\n", fg="green")
+            click.style(
+                "Successfully set config to default values\n", fg="green"
+            )
         )
         click.echo("To change the config, please see: 'askai config --help'\n")
 
@@ -215,10 +221,14 @@ class ConfigHelper:
         max_input_tries: int = MAX_INPUT_TRIES,
     ) -> int:
         for _ in range(max_input_tries):
-            input_value = input(f"Choose (press enter for default = {default_value}): ")
+            input_value = input(
+                f"Choose (press enter for default = {default_value}): "
+            )
 
             if input_value == "":
-                click.echo(click.style(f"Value chosen: {default_value}", fg="green"))
+                click.echo(
+                    click.style(f"Value chosen: {default_value}", fg="green")
+                )
                 click.echo()
                 return default_value
 
@@ -227,7 +237,9 @@ class ConfigHelper:
                 continue
             elif not predicate(int(input_value)):
                 click.echo(
-                    click.style("Input is not within allowed range.\n", fg="red")
+                    click.style(
+                        "Input is not within allowed range.\n", fg="red"
+                    )
                 )
                 continue
 
@@ -245,10 +257,14 @@ class ConfigHelper:
         max_input_tries: int = MAX_INPUT_TRIES,
     ) -> float:
         for _ in range(max_input_tries):
-            input_value = input(f"Choose (press enter for default = {default_value}): ")
+            input_value = input(
+                f"Choose (press enter for default = {default_value}): "
+            )
 
             if input_value == "":
-                click.echo(click.style(f"Value chosen: {default_value}", fg="green"))
+                click.echo(
+                    click.style(f"Value chosen: {default_value}", fg="green")
+                )
                 click.echo()
                 return default_value
 
@@ -257,7 +273,9 @@ class ConfigHelper:
                 continue
             elif not predicate(float(input_value)):
                 click.echo(
-                    click.style("Input is not within allowed range.\n", fg="red")
+                    click.style(
+                        "Input is not within allowed range.\n", fg="red"
+                    )
                 )
                 continue
 
@@ -279,7 +297,9 @@ class KeyHelper:
 
         while not self._is_valid_api_key(key):
             if num_tries >= MAX_INPUT_TRIES:
-                click.echo(click.style("Too many invalid tries. Aborted!", fg="red"))
+                click.echo(
+                    click.style("Too many invalid tries. Aborted!", fg="red")
+                )
                 exit(1)
             click.echo(click.style("The API key is not valid.", fg="red"))
             key = getpass("Enter API Key: ")
@@ -290,7 +310,11 @@ class KeyHelper:
     def save(self) -> None:
         API_KEY_PATH.parent.mkdir(parents=True, exist_ok=True)
         API_KEY_PATH.write_text(self.api_key)
-        click.echo(click.style("Your API key has been successfully added!", fg="green"))
+        click.echo(
+            click.style(
+                "Your API key has been successfully added!", fg="green"
+            )
+        )
 
     @staticmethod
     def remove() -> None:

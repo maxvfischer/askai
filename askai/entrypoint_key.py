@@ -27,7 +27,9 @@ def remove() -> None:
     if not API_KEY_PATH.is_file():
         PrintHelper.no_key()
     else:
-        user_verification = input("Do you want to remove your API key? [y/Y]? ")
+        user_verification = input(
+            "Do you want to remove your API key? [y/Y]? "
+        )
         if user_verification.lower() in ["y", "yes"]:
             KeyHelper().remove()
         else:
