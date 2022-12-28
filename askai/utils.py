@@ -1,36 +1,25 @@
+from dataclasses import asdict, dataclass
+from enum import Enum, auto
+from getpass import getpass
 from pathlib import Path
+from typing import Callable
 
-import yaml
 import click
 import openai
-from getpass import getpass
-from enum import Enum, auto
-from typing import Callable
-from dataclasses import dataclass, asdict
+import yaml
 from openai.error import AuthenticationError
 from openai.openai_object import OpenAIObject
-from .constants import (
-    CONFIG_PATH,
-    API_KEY_PATH,
-    DEFAULT_MODEL,
-    DEFAULT_NUM_ANSWERS,
-    DEFAULT_MAX_TOKENS,
-    DEFAULT_TEMPERATURE,
-    DEFAULT_TOP_P,
-    DEFAULT_FREQUENCY_PENALTY,
-    DEFAULT_PRESENCE_PENALTY,
-    MAX_INPUT_TRIES,
-    OPENAI_NUM_ANSWERS_MIN,
-    OPENAI_MAX_TOKENS_MIN,
-    OPENAI_TEMPERATURE_MIN,
-    OPENAI_TEMPERATURE_MAX,
-    OPENAI_TOP_P_MIN,
-    OPENAI_TOP_P_MAX,
-    OPENAI_FREQUENCY_PENALTY_MIN,
-    OPENAI_FREQUENCY_PENALTY_MAX,
-    OPENAI_PRESENCE_PENALTY_MIN,
-    OPENAI_PRESENCE_PENALTY_MAX,
-)
+
+from .constants import (API_KEY_PATH, CONFIG_PATH, DEFAULT_FREQUENCY_PENALTY,
+                        DEFAULT_MAX_TOKENS, DEFAULT_MODEL, DEFAULT_NUM_ANSWERS,
+                        DEFAULT_PRESENCE_PENALTY, DEFAULT_TEMPERATURE,
+                        DEFAULT_TOP_P, MAX_INPUT_TRIES,
+                        OPENAI_FREQUENCY_PENALTY_MAX,
+                        OPENAI_FREQUENCY_PENALTY_MIN, OPENAI_MAX_TOKENS_MIN,
+                        OPENAI_NUM_ANSWERS_MIN, OPENAI_PRESENCE_PENALTY_MAX,
+                        OPENAI_PRESENCE_PENALTY_MIN, OPENAI_TEMPERATURE_MAX,
+                        OPENAI_TEMPERATURE_MIN, OPENAI_TOP_P_MAX,
+                        OPENAI_TOP_P_MIN)
 
 
 class AvailableModels(Enum):

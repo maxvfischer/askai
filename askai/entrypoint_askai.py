@@ -1,22 +1,16 @@
 import click
 import openai
 
-from .constants import (
-    OPENAI_NUM_ANSWERS_MIN,
-    OPENAI_TEMPERATURE_MIN,
-    OPENAI_TEMPERATURE_MAX,
-    OPENAI_MAX_TOKENS_MIN,
-    OPENAI_TOP_P_MIN,
-    OPENAI_TOP_P_MAX,
-    OPENAI_FREQUENCY_PENALTY_MIN,
-    OPENAI_FREQUENCY_PENALTY_MAX,
-    OPENAI_PRESENCE_PENALTY_MIN,
-    OPENAI_PRESENCE_PENALTY_MAX,
-)
-from .utils import KeyHelper, ConfigHelper, PrintHelper, AvailableModels
+from .constants import (OPENAI_FREQUENCY_PENALTY_MAX,
+                        OPENAI_FREQUENCY_PENALTY_MIN, OPENAI_MAX_TOKENS_MIN,
+                        OPENAI_NUM_ANSWERS_MIN, OPENAI_PRESENCE_PENALTY_MAX,
+                        OPENAI_PRESENCE_PENALTY_MIN, OPENAI_TEMPERATURE_MAX,
+                        OPENAI_TEMPERATURE_MIN, OPENAI_TOP_P_MAX,
+                        OPENAI_TOP_P_MIN)
 from .entrypoint_config import config
 from .entrypoint_init import init
 from .entrypoint_key import key
+from .utils import AvailableModels, ConfigHelper, KeyHelper, PrintHelper
 
 
 class DefaultCommandGroup(click.Group):

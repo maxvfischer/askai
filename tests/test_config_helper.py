@@ -1,21 +1,15 @@
-from functools import partial
 from pathlib import Path
-from typing import Union, Callable
+from typing import Callable
 
 import pytest
-from pytest import MonkeyPatch
 import yaml
+from pytest import MonkeyPatch
 
-from askai.constants import (
-    DEFAULT_MODEL,
-    DEFAULT_TEMPERATURE,
-    DEFAULT_NUM_ANSWERS,
-    DEFAULT_MAX_TOKENS,
-    DEFAULT_TOP_P,
-    DEFAULT_FREQUENCY_PENALTY,
-    DEFAULT_PRESENCE_PENALTY,
-)
-from askai.utils import ConfigHelper, AvailableModels
+from askai.constants import (DEFAULT_FREQUENCY_PENALTY, DEFAULT_MAX_TOKENS,
+                             DEFAULT_MODEL, DEFAULT_NUM_ANSWERS,
+                             DEFAULT_PRESENCE_PENALTY, DEFAULT_TEMPERATURE,
+                             DEFAULT_TOP_P)
+from askai.utils import AvailableModels, ConfigHelper
 
 DUMMY_CONFIG_CONTENT = {
     "model": "text-ada-001",
