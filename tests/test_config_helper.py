@@ -1,14 +1,15 @@
-from functools import partial
 from pathlib import Path
-from typing import Union, Callable
+from typing import Callable
 
 import pytest
-from pytest import MonkeyPatch
 import yaml
+from pytest import MonkeyPatch
 
-from askai.constants import DEFAULT_MODEL, DEFAULT_TEMPERATURE, DEFAULT_NUM_ANSWERS, DEFAULT_MAX_TOKENS, DEFAULT_TOP_P, \
-    DEFAULT_FREQUENCY_PENALTY, DEFAULT_PRESENCE_PENALTY
-from askai.utils import ConfigHelper, AvailableModels
+from askai.constants import (DEFAULT_FREQUENCY_PENALTY, DEFAULT_MAX_TOKENS,
+                             DEFAULT_MODEL, DEFAULT_NUM_ANSWERS,
+                             DEFAULT_PRESENCE_PENALTY, DEFAULT_TEMPERATURE,
+                             DEFAULT_TOP_P)
+from askai.utils import AvailableModels, ConfigHelper
 
 DUMMY_CONFIG_CONTENT = {
     "model": "text-ada-001",
@@ -17,7 +18,7 @@ DUMMY_CONFIG_CONTENT = {
     "temperature": 0.1,
     "top_p": 0.1,
     "frequency_penalty": 0.1,
-    "presence_penalty": 0.1
+    "presence_penalty": 0.1,
 }
 
 
@@ -56,15 +57,15 @@ def test_from_file_config_does_not_exist(tmp_path: Path) -> None:
         _ = ConfigHelper.from_file(config_path=config_path)
 
 
-@pytest.mark.parametrize(
-    "user_input",
-    ["1", "2", "3", "4"]
-)
+@pytest.mark.parametrize("user_input", ["1", "2", "3", "4"])
 def test_input_model_ok(monkeypatch: MonkeyPatch, user_input: str) -> None:
     _mock_input_value(value=user_input, monkeypatch=monkeypatch)
     config_helper = ConfigHelper()
     config_helper.input_model(max_input_tries=1)
-    assert config_helper.model == AvailableModels(int(user_input)).name.replace("_", "-").lower()
+    assert (
+        config_helper.model
+        == AvailableModels(int(user_input)).name.replace("_", "-").lower()
+    )
 
 
 def test_input_num_answer_ok(monkeypatch: MonkeyPatch) -> None:
@@ -74,10 +75,7 @@ def test_input_num_answer_ok(monkeypatch: MonkeyPatch) -> None:
 
     config_helper = ConfigHelper()
     assert int(user_input) != config_helper.num_answers
-    config_helper.input_num_answer(
-        min_value=min_value,
-        max_input_tries=1
-    )
+    config_helper.input_num_answer(min_value=min_value, max_input_tries=1)
     assert int(user_input) == config_helper.num_answers
 
 
@@ -88,10 +86,7 @@ def test_input_max_token_ok(monkeypatch: MonkeyPatch) -> None:
 
     config_helper = ConfigHelper()
     assert int(user_input) != config_helper.max_tokens
-    config_helper.input_max_token(
-        min_value=min_value,
-        max_input_tries=1
-    )
+    config_helper.input_max_token(min_value=min_value, max_input_tries=1)
     assert int(user_input) == config_helper.max_tokens
 
 
@@ -104,9 +99,7 @@ def test_input_temperature_ok(monkeypatch: MonkeyPatch) -> None:
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.temperature
     config_helper.input_temperature(
-        min_value=min_value,
-        max_value=max_value,
-        max_input_tries=1
+        min_value=min_value, max_value=max_value, max_input_tries=1
     )
     assert float(user_input) == config_helper.temperature
 
@@ -120,9 +113,7 @@ def test_input_top_p_ok(monkeypatch: MonkeyPatch) -> None:
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.top_p
     config_helper.input_top_p(
-        min_value=min_value,
-        max_value=max_value,
-        max_input_tries=1
+        min_value=min_value, max_value=max_value, max_input_tries=1
     )
     assert float(user_input) == config_helper.top_p
 
@@ -136,9 +127,7 @@ def test_input_frequency_penalty_ok(monkeypatch: MonkeyPatch) -> None:
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.frequency_penalty
     config_helper.input_frequency_penalty(
-        min_value=min_value,
-        max_value=max_value,
-        max_input_tries=1
+        min_value=min_value, max_value=max_value, max_input_tries=1
     )
     assert float(user_input) == config_helper.frequency_penalty
 
@@ -152,9 +141,7 @@ def test_input_presence_penalty_ok(monkeypatch: MonkeyPatch) -> None:
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.presence_penalty
     config_helper.input_presence_penalty(
-        min_value=min_value,
-        max_value=max_value,
-        max_input_tries=1
+        min_value=min_value, max_value=max_value, max_input_tries=1
     )
     assert float(user_input) == config_helper.presence_penalty
 
@@ -164,9 +151,11 @@ def test_input_presence_penalty_ok(monkeypatch: MonkeyPatch) -> None:
     [
         "-1",  # Too low
         "5",  # Too high
-    ]
+    ],
 )
-def test_input_model_out_of_allowed_range(monkeypatch: MonkeyPatch, user_input: str) -> None:
+def test_input_model_out_of_allowed_range(
+    monkeypatch: MonkeyPatch, user_input: str
+) -> None:
     _mock_input_value(value=user_input, monkeypatch=monkeypatch)
     with pytest.raises(SystemExit):
         config_helper = ConfigHelper()
@@ -180,9 +169,11 @@ def test_input_model_out_of_allowed_range(monkeypatch: MonkeyPatch, user_input: 
         ConfigHelper().input_top_p,
         ConfigHelper().input_frequency_penalty,
         ConfigHelper().input_presence_penalty,
-    ]
+    ],
 )
-def test_input_min_max_out_of_range(monkeypatch: MonkeyPatch, input_func: Callable) -> None:
+def test_input_min_max_out_of_range(
+    monkeypatch: MonkeyPatch, input_func: Callable
+) -> None:
     user_input_too_low = "1.0"
     user_input_too_high = "5.0"
     min_value = float(user_input_too_low) + 1.0
@@ -190,18 +181,10 @@ def test_input_min_max_out_of_range(monkeypatch: MonkeyPatch, input_func: Callab
 
     with pytest.raises(SystemExit):
         _mock_input_value(value=user_input_too_low, monkeypatch=monkeypatch)
-        input_func(
-            min_value=min_value,
-            max_value=max_value,
-            max_input_tries=1
-        )
+        input_func(min_value=min_value, max_value=max_value, max_input_tries=1)
     with pytest.raises(SystemExit):
         _mock_input_value(value=user_input_too_high, monkeypatch=monkeypatch)
-        input_func(
-            min_value=min_value,
-            max_value=max_value,
-            max_input_tries=1
-        )
+        input_func(min_value=min_value, max_value=max_value, max_input_tries=1)
 
 
 @pytest.mark.parametrize(
@@ -209,22 +192,21 @@ def test_input_min_max_out_of_range(monkeypatch: MonkeyPatch, input_func: Callab
     [
         ConfigHelper().input_num_answer,
         ConfigHelper().input_max_token,
-    ]
+    ],
 )
-def test_input_min_out_of_range(monkeypatch: MonkeyPatch, input_func: Callable) -> None:
+def test_input_min_out_of_range(
+    monkeypatch: MonkeyPatch, input_func: Callable
+) -> None:
     user_input_too_low = "1.0"
     min_value = float(user_input_too_low) + 1.0
 
     with pytest.raises(SystemExit):
         _mock_input_value(value=user_input_too_low, monkeypatch=monkeypatch)
-        input_func(
-            min_value=min_value,
-            max_input_tries=1
-        )
+        input_func(min_value=min_value, max_input_tries=1)
 
 
 def _mock_input_value(value: str, monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.setattr('builtins.input', lambda _: value)
+    monkeypatch.setattr("builtins.input", lambda _: value)
 
 
 def test_update(tmp_path: Path) -> None:

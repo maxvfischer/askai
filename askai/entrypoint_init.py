@@ -1,6 +1,6 @@
 import click
 
-from .utils import KeyHelper, ConfigHelper, PrintHelper
+from .utils import ConfigHelper, KeyHelper, PrintHelper
 
 
 @click.command()

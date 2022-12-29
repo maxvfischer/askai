@@ -1,0 +1,13 @@
+graft askai
+graft images
+graft ci
+graft tests
+
+
+include pytest.ini
+include tox.ini
+include .github/workflows/github-actions.yml
+
+include README.rst
+
+global-exclude *.py[cod] __pycache__/* *.so *.dylib CNAME

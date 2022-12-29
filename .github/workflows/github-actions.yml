@@ -1,0 +1,77 @@
+name: build
+on: [push]
+jobs:
+  test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'check'
+            python: '3.9'
+            toxpython: 'python3.9'
+            tox_env: 'check'
+            os: 'ubuntu-latest'
+          - name: 'docs'
+            python: '3.9'
+            toxpython: 'python3.9'
+            tox_env: 'docs'
+            os: 'ubuntu-latest'
+          - name: 'py39 (ubuntu)'
+            python: '3.9'
+            toxpython: 'python3.9'
+            python_arch: 'x64'
+            tox_env: 'py39'
+            os: 'ubuntu-latest'
+          - name: 'py39 (windows)'
+            python: '3.9'
+            toxpython: 'python3.9'
+            python_arch: 'x64'
+            tox_env: 'py39'
+            os: 'windows-latest'
+          - name: 'py39 (macos)'
+            python: '3.9'
+            toxpython: 'python3.9'
+            python_arch: 'x64'
+            tox_env: 'py39'
+            os: 'macos-latest'
+          - name: 'py310 (ubuntu)'
+            python: '3.10'
+            toxpython: 'python3.10'
+            python_arch: 'x64'
+            tox_env: 'py310'
+            os: 'ubuntu-latest'
+          - name: 'py310 (windows)'
+            python: '3.10'
+            toxpython: 'python3.10'
+            python_arch: 'x64'
+            tox_env: 'py310'
+            os: 'windows-latest'
+          - name: 'py310 (macos)'
+            python: '3.10'
+            toxpython: 'python3.10'
+            python_arch: 'x64'
+            tox_env: 'py310'
+            os: 'macos-latest'
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+        architecture: ${{ matrix.python_arch }}
+    - name: install dependencies
+      run: |
+        python -mpip install --progress-bar=off -r ci/requirements.txt
+        virtualenv --version
+        pip --version
+        tox --version
+        pip list --format=freeze
+    - name: test
+      env:
+        TOXPYTHON: '${{ matrix.toxpython }}'
+      run: >
+        tox -e ${{ matrix.tox_env }} -v
