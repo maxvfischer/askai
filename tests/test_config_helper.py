@@ -1,6 +1,5 @@
-from functools import partial
 from pathlib import Path
-from typing import Union, Callable
+from typing import Callable
 
 import pytest
 from pytest import MonkeyPatch
@@ -61,7 +60,7 @@ def test_from_file_config_does_not_exist(tmp_path: Path) -> None:
     ["1", "2", "3", "4"]
 )
 def test_input_model_ok(monkeypatch: MonkeyPatch, user_input: str) -> None:
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
     config_helper = ConfigHelper()
     config_helper.input_model(max_input_tries=1)
     assert config_helper.model == AvailableModels(int(user_input)).name.replace("_", "-").lower()
@@ -70,7 +69,7 @@ def test_input_model_ok(monkeypatch: MonkeyPatch, user_input: str) -> None:
 def test_input_num_answer_ok(monkeypatch: MonkeyPatch) -> None:
     user_input = "2"
     min_value = int(user_input) - 1
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
 
     config_helper = ConfigHelper()
     assert int(user_input) != config_helper.num_answers
@@ -84,7 +83,7 @@ def test_input_num_answer_ok(monkeypatch: MonkeyPatch) -> None:
 def test_input_max_token_ok(monkeypatch: MonkeyPatch) -> None:
     user_input = "2"
     min_value = int(user_input) - 1
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
 
     config_helper = ConfigHelper()
     assert int(user_input) != config_helper.max_tokens
@@ -99,7 +98,7 @@ def test_input_temperature_ok(monkeypatch: MonkeyPatch) -> None:
     user_input = "1.5"
     min_value = float(user_input) - 1.0
     max_value = float(user_input) + 1.0
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
 
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.temperature
@@ -115,7 +114,7 @@ def test_input_top_p_ok(monkeypatch: MonkeyPatch) -> None:
     user_input = "1.5"
     min_value = float(user_input) - 1.0
     max_value = float(user_input) + 1.0
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
 
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.top_p
@@ -131,7 +130,7 @@ def test_input_frequency_penalty_ok(monkeypatch: MonkeyPatch) -> None:
     user_input = "1.5"
     min_value = float(user_input) - 1.0
     max_value = float(user_input) + 1.0
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
 
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.frequency_penalty
@@ -147,7 +146,7 @@ def test_input_presence_penalty_ok(monkeypatch: MonkeyPatch) -> None:
     user_input = "1.5"
     min_value = float(user_input) - 1.0
     max_value = float(user_input) + 1.0
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
 
     config_helper = ConfigHelper()
     assert float(user_input) != config_helper.presence_penalty
@@ -167,7 +166,7 @@ def test_input_presence_penalty_ok(monkeypatch: MonkeyPatch) -> None:
     ]
 )
 def test_input_model_out_of_allowed_range(monkeypatch: MonkeyPatch, user_input: str) -> None:
-    _mock_input_value(value=user_input, monkeypatch=monkeypatch)
+    mock_input_value(value=user_input, monkeypatch=monkeypatch)
     with pytest.raises(SystemExit):
         config_helper = ConfigHelper()
         config_helper.input_model(max_input_tries=1)
@@ -189,14 +188,14 @@ def test_input_min_max_out_of_range(monkeypatch: MonkeyPatch, input_func: Callab
     max_value = float(user_input_too_high) - 1.0
 
     with pytest.raises(SystemExit):
-        _mock_input_value(value=user_input_too_low, monkeypatch=monkeypatch)
+        mock_input_value(value=user_input_too_low, monkeypatch=monkeypatch)
         input_func(
             min_value=min_value,
             max_value=max_value,
             max_input_tries=1
         )
     with pytest.raises(SystemExit):
-        _mock_input_value(value=user_input_too_high, monkeypatch=monkeypatch)
+        mock_input_value(value=user_input_too_high, monkeypatch=monkeypatch)
         input_func(
             min_value=min_value,
             max_value=max_value,
@@ -216,15 +215,29 @@ def test_input_min_out_of_range(monkeypatch: MonkeyPatch, input_func: Callable) 
     min_value = float(user_input_too_low) + 1.0
 
     with pytest.raises(SystemExit):
-        _mock_input_value(value=user_input_too_low, monkeypatch=monkeypatch)
+        mock_input_value(value=user_input_too_low, monkeypatch=monkeypatch)
         input_func(
             min_value=min_value,
             max_input_tries=1
         )
 
 
-def _mock_input_value(value: str, monkeypatch: MonkeyPatch) -> None:
+def mock_input_value(value: str, monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('builtins.input', lambda _: value)
+
+
+def test_as_dict() -> None:
+    config_helper = ConfigHelper()
+    expected = {
+        'model': config_helper.model,
+        'num_answers': config_helper.num_answers,
+        'max_tokens': config_helper.max_tokens,
+        'temperature': config_helper.temperature,
+        'top_p': config_helper.top_p,
+        'frequency_penalty': config_helper.frequency_penalty,
+        'presence_penalty': config_helper.presence_penalty
+    }
+    assert config_helper.as_dict() == expected
 
 
 def test_update(tmp_path: Path) -> None:

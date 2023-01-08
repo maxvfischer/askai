@@ -51,7 +51,7 @@ class ConfigHelper:
     @classmethod
     def from_file(cls, config_path: Path = CONFIG_PATH) -> 'ConfigHelper':
         if config_path.is_file():
-            with open(config_path, "r") as f:
+            with open(config_path, "r", encoding="utf8") as f:
                 config = yaml.safe_load(f)
                 return cls(**config)
         else:
@@ -145,7 +145,7 @@ class ConfigHelper:
 
     def update(self, config_path: Path = CONFIG_PATH) -> None:
         config = self.as_dict()
-        with open(config_path, "w") as f:
+        with open(config_path, "w", encoding="utf8") as f:
             yaml.dump(config, f)
 
         click.echo(click.style("Config updated successfully!", fg="green"))
@@ -153,7 +153,7 @@ class ConfigHelper:
     @staticmethod
     def reset(config_path: Path = CONFIG_PATH) -> None:
         config = ConfigHelper().as_dict()  # Create config with default values
-        with open(config_path, "w") as f:
+        with open(config_path, "w", encoding="utf8") as f:
             yaml.dump(config, f)
 
         click.echo("\nDefault config has been created with the following values:")
@@ -168,7 +168,7 @@ class ConfigHelper:
             click.echo("No config exists. Please reset the config ('askai config reset') "
                        "or see 'askai config --help'.\n")
         else:
-            with open(config_path, "r") as f:
+            with open(config_path, "r", encoding="utf8") as f:
                 try:
                     config = yaml.safe_load(f)
                     for key, value in config.items():
@@ -229,9 +229,9 @@ class ConfigHelper:
         exit(1)
 
 
-@dataclass
 class KeyHelper:
-    api_key: str = ""
+    def __init__(self):
+        self._api_key: str = ""
 
     def input(self) -> None:
         key = getpass("Enter API Key: ")
@@ -245,22 +245,26 @@ class KeyHelper:
             key = getpass("Enter API Key: ")
             num_tries += 1
 
-        self.api_key = key
+        self._api_key = key
 
-    def save(self) -> None:
-        API_KEY_PATH.parent.mkdir(parents=True, exist_ok=True)
-        API_KEY_PATH.write_text(self.api_key)
+    def save(self, api_key_path: Path = API_KEY_PATH) -> None:
+        api_key_path.parent.mkdir(parents=True, exist_ok=True)
+        api_key_path.write_text(self._api_key, encoding="utf8")
         click.echo(click.style("Your API key has been successfully added!", fg="green"))
 
     @staticmethod
-    def remove() -> None:
-        API_KEY_PATH.unlink()
-        click.echo(click.style("API key removed.", fg="green"))
+    def remove(api_key_path: Path = API_KEY_PATH) -> None:
+        try:
+            api_key_path.unlink()
+            click.echo(click.style("API key removed.", fg="green"))
+        except FileNotFoundError:
+            click.echo(click.style("No API key found.", fg="red"))
+            exit()
 
-    @classmethod
-    def from_file(cls) -> str:
-        if API_KEY_PATH.is_file():
-            with open(API_KEY_PATH, "r") as f:
+    @staticmethod
+    def from_file(api_key_path: Path = API_KEY_PATH) -> str:
+        if api_key_path.is_file():
+            with open(api_key_path, "r", encoding="utf8") as f:
                 api_key = f.read().strip()
             return api_key
         else:
